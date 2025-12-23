@@ -31,12 +31,12 @@ namespace voicio.ViewModels
             get => _LastSearches;
             set => this.RaiseAndSetIfChanged(ref _LastSearches, value);
         }
-        private List<Tag>? _TagsForChoice;
-        public List<Tag>? TagsForChoice
-        {
-            get => _TagsForChoice;
-            set => this.RaiseAndSetIfChanged(ref _TagsForChoice, value);
-        }
+        //private List<Tag>? _TagsForChoice;
+        //public List<Tag>? TagsForChoice
+        //{
+        //    get => _TagsForChoice;
+        //    set => this.RaiseAndSetIfChanged(ref _TagsForChoice, value);
+        //}
         private ObservableCollection<Hint>? _HintsRows;
         public ObservableCollection<Hint>? HintsRows
         {
@@ -69,7 +69,7 @@ namespace voicio.ViewModels
         }
         private bool _IsTextSearch = true;
         private bool _IsCommentSearch = true;
-        private bool _IsTagSearch = true;
+        //private bool _IsTagSearch = true;
         private bool _IsFuzzy = true;
         private bool _IsGridEditable = false;
         private bool _IsAddButtonVisible = false;
@@ -91,11 +91,11 @@ namespace voicio.ViewModels
             get => _IsCommentSearch;
             set => this.RaiseAndSetIfChanged(ref _IsCommentSearch, value);
         }
-        public bool IsTagSearch
-        {
-            get => _IsTagSearch;
-            set => this.RaiseAndSetIfChanged(ref _IsTagSearch, value);
-        }
+        //public bool IsTagSearch
+        //{
+        //    get => _IsTagSearch;
+        //    set => this.RaiseAndSetIfChanged(ref _IsTagSearch, value);
+        //}
         public bool IsHighlighting
         {
             get => _IsHighlighting;
@@ -286,20 +286,20 @@ namespace voicio.ViewModels
         {
             using (var DataSource = new HelpContext())
             {
-                LastSearches.Insert(0, Query);
+                if (Query.Trim() != "") LastSearches.Insert(0, Query);
                 List<Hint> hints = new List<Hint>();
-                TagsForChoice = DataSource.TagTable.ToList();
+                //TagsForChoice = DataSource.TagTable.ToList();
                 if (IsFuzzy)
                 {
                     if (IsTextSearch) hints.Add(DataSource.HintTable.Where(b => b.HintText.Contains(Query)).ToList());
                     if (IsCommentSearch) hints.Add(DataSource.HintTable.Where(b => b.Comment.Contains(Query)).ToList());
-                    if (IsTagSearch) hints.Add(DataSource.HintTable.Where(b => b.HintTag.Any(pz => pz.Tag.TagText.Contains(Query))).ToList());
+                    //if (IsTagSearch) hints.Add(DataSource.HintTable.Where(b => b.HintTag.Any(pz => pz.Tag.TagText.Contains(Query))).ToList());
                 }
                 else
                 {
                     if (IsTextSearch) hints.Add(DataSource.HintTable.Where(b => b.HintText == Query).ToList());
                     if (IsCommentSearch) hints.Add(DataSource.HintTable.Where(b => b.Comment == Query).ToList());
-                    if (IsTagSearch) hints.Add(DataSource.HintTable.Where(b => b.HintTag.Any(pz => pz.Tag.TagText == Query)).ToList());
+                    //if (IsTagSearch) hints.Add(DataSource.HintTable.Where(b => b.HintTag.Any(pz => pz.Tag.TagText == Query)).ToList());
                 }
                 HintsRows = new ObservableCollection<Hint>(hints.Distinct());
                 if (HintsRows.Count > 0)

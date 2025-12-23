@@ -92,7 +92,7 @@
 		<StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
 			<CheckBox IsChecked="{Binding IsTextSearch}" Margin="20,10,20,10">Text</CheckBox>
 			<CheckBox IsChecked="{Binding IsCommentSearch}" Margin="20,0,20,0">Comment</CheckBox>
-			<CheckBox IsChecked="{Binding IsTagSearch}" Margin="20,0,20,0">Tags</CheckBox>
+			<!--<CheckBox IsChecked="{Binding IsTagSearch}" Margin="20,0,20,0">Tags</CheckBox>-->
 			<!--<CheckBox IsChecked="{Binding IsHighlighting}" Margin="170,0,20,0">Highlight</CheckBox>-->
 		</StackPanel>
 		<DockPanel>
