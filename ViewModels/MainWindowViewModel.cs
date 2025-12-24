@@ -15,7 +15,6 @@ using System.Reactive;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using System.Reactive.Linq;
-using voicio.Converters;
 using System;
 
 namespace voicio.ViewModels
@@ -75,7 +74,6 @@ namespace voicio.ViewModels
         private bool _IsAddButtonVisible = false;
         private bool _IsHighlighting = false; //to do when i will understand the way to assign some struct to every table field in TreeDataGrid
         private bool _IsVoiceSearching = false;
-        private TreeDataGridConverter TagGocntrolConverter = new TreeDataGridConverter();
         public bool IsVoiceSearching
         {
             get => _IsVoiceSearching;

@@ -1,11 +1,12 @@
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using System.Threading.Tasks;
+using voicio.Models;
+using voicio.Services;
 using voicio.ViewModels;
 using voicio.Views;
-using voicio.Models;
-using System.Threading.Tasks;
-using voicio.Services;
 
 namespace voicio
 {
@@ -19,6 +20,7 @@ namespace voicio
         public override void Initialize()
         {
             AvaloniaXamlLoader.Load(this);
+
         }
         public async override void OnFrameworkInitializationCompleted()
         {
@@ -28,13 +30,13 @@ namespace voicio
             {
                 desktop.MainWindow = new MainWindow
                 {
-                   DataContext = new MainWindowViewModel(),
+                    DataContext = new MainWindowViewModel(),
                 };
-                desktop.ShutdownMode = Avalonia.Controls.ShutdownMode.OnExplicitShutdown;
+                desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown;
             }
             await Task.Run(() =>
             {
-                new VoiceService().StartService();
+                new VoiceService().Start();
             });
             base.OnFrameworkInitializationCompleted();
         }

@@ -18,9 +18,6 @@
 		ExtendClientAreaToDecorationsHint="True"
 		ExtendClientAreaTitleBarHeightHint="-1"
 		>
-	<Window.Resources>
-		<vis:RowColorGridConverter x:Key="RowColorGridConverter"/>
-	</Window.Resources>
 	<Window.Styles>
 		<Style Selector="TreeDataGridRow">
 			<Setter Property="Height" Value="30"/>
