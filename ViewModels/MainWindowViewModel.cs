@@ -21,7 +21,7 @@ namespace voicio.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        private NAudioRecorder recorder;
+        private InteractiveAudioRecorder recorder;
         private System.Timers.Timer RecordTimer;
         private TaskCompletionSource<bool> voiceSearchTask;
         private ObservableCollection<string>? _LastSearches;
@@ -125,7 +125,7 @@ namespace voicio.ViewModels
             if (!IsVoiceSearching)
             {
                 IsVoiceSearching = true;
-                recorder = new NAudioRecorder();
+                recorder = new InteractiveAudioRecorder();
                 Dispatcher.UIThread.Invoke(() =>
                 {
                     recorder.StartRecord();

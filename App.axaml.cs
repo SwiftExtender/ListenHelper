@@ -4,7 +4,6 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using System.Threading.Tasks;
 using voicio.Models;
-using voicio.Services;
 using voicio.ViewModels;
 using voicio.Views;
 
@@ -36,7 +35,8 @@ namespace voicio
             }
             await Task.Run(() =>
             {
-                new VoiceService().Start();
+                BackgroundAudioRecorder rec = new BackgroundAudioRecorder();
+                rec.Start();
             });
             base.OnFrameworkInitializationCompleted();
         }

@@ -1,25 +1,12 @@
-using NAudio.Wave;
+﻿using NAudio.Wave;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using voicio.Models;
 
-namespace voicio.Services
+namespace voicio.Models
 {
-    public class VoiceService : IDisposable
+    public class BackgroundAudioRecorder
     {
-        //public VoiceService()
-        //{
-
-        //}
-        //public async void StartService()
-        //{
-
-        //}
-        //public async void StopService()
-        //{
-
-        //}
         private WasapiLoopbackCapture _capture;
         private CancellationTokenSource _cancellationTokenSource;
         private readonly int _sampleRate = 16000;
@@ -75,7 +62,3 @@ namespace voicio.Services
         }
     }
 }
-
-    
-
-
