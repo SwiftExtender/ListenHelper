@@ -2,7 +2,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using System.Threading.Tasks;
 using voicio.Models;
 using voicio.ViewModels;
 using voicio.Views;
@@ -21,7 +20,7 @@ namespace voicio
             AvaloniaXamlLoader.Load(this);
 
         }
-        public async override void OnFrameworkInitializationCompleted()
+        public override void OnFrameworkInitializationCompleted()
         {
             var tempdb = new HelpContext();
             tempdb.Database.EnsureCreated(); //create DB if no DB is found
@@ -32,12 +31,7 @@ namespace voicio
                     DataContext = new MainWindowViewModel(),
                 };
                 desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown;
-            }
-            await Task.Run(() =>
-            {
-                BackgroundAudioRecorder rec = new BackgroundAudioRecorder();
-                rec.Start();
-            });
+            } 
             base.OnFrameworkInitializationCompleted();
         }
     }

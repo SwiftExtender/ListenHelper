@@ -1,4 +1,5 @@
 ﻿using NAudio.Wave;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,15 +15,26 @@ namespace voicio.Models
 
         public event EventHandler WakeWordDetected;
 
-        public void Start()
+        public void RecordLoop(CancellationToken token)
         {
-            _capture = new WasapiLoopbackCapture();
-            _capture.WaveFormat = new WaveFormat(_sampleRate, 16, 1);
+            try
+            {
+                _capture = new WasapiLoopbackCapture();
+                _capture.DataAvailable += OnAudioDataAvailable;
+                //_capture.RecordingStopped += (s, a) => { /* Handle stop */ };
+                _capture.StartRecording();
 
-            _capture.DataAvailable += OnAudioDataAvailable;
-            _cancellationTokenSource = new CancellationTokenSource();
-
-            _capture.StartRecording();
+                // Poll token periodically (NAudio doesn't auto-check it)
+                while (!token.IsCancellationRequested && _capture?.CaptureState == NAudio.CoreAudioApi.CaptureState.Capturing)
+                {
+                    token.ThrowIfCancellationRequested();
+                    Thread.Sleep(50); // Low CPU poll
+                }
+            }
+            finally
+            {
+                Dispose();
+            }
         }
 
         private async void OnAudioDataAvailable(object sender, WaveInEventArgs e)

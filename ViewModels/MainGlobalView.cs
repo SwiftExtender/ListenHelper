@@ -1,27 +1,54 @@
 ﻿using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Threading;
 using ReactiveUI;
+using System;
 using System.Reactive;
+using System.Threading;
+using System.Threading.Tasks;
+using voicio.Models;
 using voicio.Views;
 
 namespace voicio.ViewModels
 {
     public class MainGlobalView: ViewModelBase
     {
-        private ImportWindow importWindow = null;
-        private TagWindow tagWindow = null;
+        //private ImportWindow importWindow = null;
+        //private TagWindow tagWindow = null;
+        private CancellationTokenSource? _cts;
+        public Task? ListenTask;
         public ReactiveCommand<Unit, Unit> ShowVoiceOperationsCommand { get; }
         public ReactiveCommand<Unit,Unit> OpenMainWindow { get; }
         public ReactiveCommand<Unit, Unit> QuitAppCommand { get; }
         public ReactiveCommand<Unit, Unit> ShowTagsWindowCommand { get; }
         public ReactiveCommand<Unit, Unit> ShowImportWindowCommand { get; }
+        public void StartListenService(CancellationToken token)
+        {
+            try
+            {
+                
+                while (!token.IsCancellationRequested)
+                {
+                    //Thread.Sleep(3000);
+                    BackgroundAudioRecorder rec = new BackgroundAudioRecorder();
+                    rec.Start();
+                    //Dispatcher.UIThread.Post(() => { /* update property */ });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                //return false;
+            }
+
+        }
         public MainGlobalView() {
             OpenMainWindow = ReactiveCommand.Create(() => {
                 var w1 = new MainWindow() { DataContext = new MainWindowViewModel() };
                 w1.Show();
             });
             ShowVoiceOperationsCommand = ReactiveCommand.Create(() => {
-                var w2 = new VoiceOperationWindow() { DataContext = new VoiceOperationViewModel() };
+                var w2 = new VoiceOperationWindow() { DataContext = new VoiceOperationViewModel(_cts) };
                 w2.Show();
             });
             ShowImportWindowCommand = ReactiveCommand.Create(() => {
@@ -38,6 +65,9 @@ namespace voicio.ViewModels
                     desktop.Shutdown();
                 }
             });
+            _cts = new CancellationTokenSource();
+            ListenTask = Task.Run(() => StartListenService(_cts.Token), _cts.Token);
+            
         }
     }
 }

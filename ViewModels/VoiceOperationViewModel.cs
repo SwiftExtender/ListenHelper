@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using voicio.Models;
 using voicio.Views;
+using System.Threading;
 
 namespace voicio.ViewModels
 {
@@ -158,7 +159,7 @@ namespace voicio.ViewModels
             }
             TreeDataGridInit();
         }
-        public VoiceOperationViewModel()
+        public VoiceOperationViewModel(CancellationTokenSource cts)
         {
             VoiceOperationRows = new ObservableCollection<VoiceOperation>();
             TreeDataGridInit();
