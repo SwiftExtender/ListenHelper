@@ -26,12 +26,10 @@ namespace voicio.ViewModels
         {
             try
             {
-                
+                BackgroundAudioRecorder rec = new BackgroundAudioRecorder();
                 while (!token.IsCancellationRequested)
                 {
-                    //Thread.Sleep(3000);
-                    BackgroundAudioRecorder rec = new BackgroundAudioRecorder();
-                    rec.Start();
+                    rec.RecordLoop(token);
                     //Dispatcher.UIThread.Post(() => { /* update property */ });
                 }
             }

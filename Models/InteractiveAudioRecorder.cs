@@ -1,6 +1,5 @@
 ﻿using NAudio.Wave;
 using System.IO;
-using System.Threading;
 
 namespace voicio.Models
 {
@@ -35,7 +34,7 @@ namespace voicio.Models
             {
                 WaveFormat = new WaveFormat(rate: 48000, bits: 16, channels: 1),
                 DeviceNumber = 0,
-                BufferMilliseconds = 10000,
+                BufferMilliseconds = 7000,
             };
             Microphone.DataAvailable += DataAvailableEvent;
             CustomStream = new MemoryStream();
