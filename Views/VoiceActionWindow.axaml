@@ -1,0 +1,65 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="voicio.VoiceActionWindow"
+        Title="VoiceActionWindow">
+	<Window.Styles>
+		<Style Selector="TreeDataGridRow">
+			<Setter Property="Height" Value="30"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="BorderBrush" Value="Gray"/>
+			<Setter Property="HorizontalAlignment" Value="Stretch"/>
+		</Style>
+		<Style Selector="Button">
+			<Setter Property="HorizontalContentAlignment" Value="Center"/>
+			<Setter Property="VerticalContentAlignment" Value="Center"/>
+		</Style>
+		<Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="{Binding $parent[Button].Background}"></Setter>
+			<Setter Property="BorderBrush" Value="Wheat"></Setter>
+		</Style>
+		<Style Selector="ToggleButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="{Binding $parent[Button].Background}"></Setter>
+			<Setter Property="BorderBrush" Value="Wheat"></Setter>
+		</Style>
+		<Style Selector="ToggleButton">
+			<Setter Property="HorizontalContentAlignment" Value="Center"/>
+			<Setter Property="VerticalContentAlignment" Value="Center"/>
+		</Style>
+		<Style Selector="ToggleButton.Pin">
+			<Style Selector="^:unchecked ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Content" Value="No pin"/>
+				<Setter Property="Background" Value="DarkGoldenrod"/>
+			</Style>
+			<Style Selector="^:checked ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Content" Value="Pin"/>
+				<Setter Property="Background" Value="Green"/>
+			</Style>
+		</Style>
+		<Style Selector="ToggleButton.SearchType">
+			<Style Selector="^:unchecked ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Background" Value="DarkGoldenrod"/>
+				<Setter Property="Content" Value="Strict"/>
+			</Style>
+			<Style Selector="^:checked ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Background" Value="Green"/>
+				<Setter Property="Content" Value="Fuzzy"/>
+			</Style>
+		</Style>
+		<Style Selector="ToggleButton.EditingMode">
+			<Style Selector="^:unchecked ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Background" Value="#5b5b5b"/>
+				<Setter Property="Content" Value="Editing off"/>
+			</Style>
+			<Style Selector="^:checked ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Background" Value="#FFFF6B14"/>
+				<Setter Property="Content" Value="Editing on"/>
+			</Style>
+		</Style>
+	</Window.Styles>
+	<Border BorderThickness="1.5" BorderBrush="#D2B1A38E" IsVisible="True">
+		<Label Margin="10,5,10,0" BorderBrush="White" Content="{Binding Query}" >Tags</Label>
+	</Border>
+</Window>

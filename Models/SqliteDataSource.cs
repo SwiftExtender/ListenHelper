@@ -66,7 +66,7 @@ namespace voicio.Models
             Id = id;
         }
     }   
-    public class VoiceOperation
+    public class VoiceSetting
     {
         [Key, Required]
         public int Id { get; set; }
@@ -77,11 +77,11 @@ namespace voicio.Models
         public byte[]? ActionTreeExpression { get; set; }
         [NotMapped]
         public bool IsSaved { get; set; } = true; //false = temp, true = in DB
-        public VoiceOperation(bool isSaved)
+        public VoiceSetting(bool isSaved)
         {
             IsSaved = isSaved;
         }
-        public VoiceOperation(int id, bool isActive, string description, string command)
+        public VoiceSetting(int id, bool isActive, string description, string command)
         {
             Id = id;
             IsActive = isActive;
@@ -94,7 +94,7 @@ namespace voicio.Models
         public DbSet<Tag>? TagTable { get; set; }
         public DbSet<Hint>? HintTable { get; set; }
         public DbSet<HintTag>? HintTagTable { get; set; }
-        public DbSet<VoiceOperation>? VoiceOperationTable { get; set; }
+        public DbSet<VoiceSetting>? VoiceSettingTable { get; set; }
         private string DbPath { get; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

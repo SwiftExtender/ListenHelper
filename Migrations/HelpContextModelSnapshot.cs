@@ -68,7 +68,7 @@ namespace voicio.Migrations
                     b.ToTable("TagTable");
                 });
 
-            modelBuilder.Entity("voicio.Models.VoiceOperation", b =>
+            modelBuilder.Entity("voicio.Models.VoiceSetting", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -90,7 +90,7 @@ namespace voicio.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("VoiceOperationTable");
+                    b.ToTable("VoiceSettingTable");
                 });
 
             modelBuilder.Entity("voicio.Models.HintTag", b =>

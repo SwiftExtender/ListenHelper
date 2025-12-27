@@ -14,7 +14,7 @@ using System.Threading;
 
 namespace voicio.ViewModels
 {
-    public class VoiceOperationViewModel : ViewModelBase
+    public class VoiceSettingViewModel : ViewModelBase
     {
         private bool _IsPinnedWindow = false;
         public bool IsPinnedWindow
@@ -22,68 +22,68 @@ namespace voicio.ViewModels
             get => _IsPinnedWindow;
             set => this.RaiseAndSetIfChanged(ref _IsPinnedWindow, value);
         }
-        private FlatTreeDataGridSource<VoiceOperation>? _VoiceOperationGridData;
-        public FlatTreeDataGridSource<VoiceOperation>? VoiceOperationGridData
+        private FlatTreeDataGridSource<VoiceSetting>? _VoiceSettingGridData;
+        public FlatTreeDataGridSource<VoiceSetting>? VoiceSettingGridData
         {
-            get => _VoiceOperationGridData;
-            set => this.RaiseAndSetIfChanged(ref _VoiceOperationGridData, value);
+            get => _VoiceSettingGridData;
+            set => this.RaiseAndSetIfChanged(ref _VoiceSettingGridData, value);
         }
-        private ObservableCollection<VoiceOperation>? _VoiceOperationRows;
-        public ObservableCollection<VoiceOperation>? VoiceOperationRows
+        private ObservableCollection<VoiceSetting>? _VoiceSettingRows;
+        public ObservableCollection<VoiceSetting>? VoiceSettingRows
         {
-            get => _VoiceOperationRows;
-            set => this.RaiseAndSetIfChanged(ref _VoiceOperationRows, value);
+            get => _VoiceSettingRows;
+            set => this.RaiseAndSetIfChanged(ref _VoiceSettingRows, value);
         }
         public void AddTempOperation()
         {
-            VoiceOperation newOp = new VoiceOperation(false);
-            VoiceOperationRows.Add(newOp);
+            VoiceSetting newOp = new VoiceSetting(false);
+            VoiceSettingRows.Add(newOp);
         }
         private void CompileActionViewer(object sender, RoutedEventArgs e)
         {
             var btn = (Button)sender;
-            var codeWindow = new CodeWindow() {DataContext=new CodeWindowViewModel((VoiceOperation)btn.DataContext) };
+            var codeWindow = new CodeWindow() {DataContext=new CodeWindowViewModel((VoiceSetting)btn.DataContext) };
             codeWindow.Show();
         }
-        private Button ToggleCompileActionButtonInit(VoiceOperation obj)
+        private Button ToggleCompileActionButtonInit(VoiceSetting obj)
         {
             var LogViewButton = new Button();
             LogViewButton.Click += CompileActionViewer;
             LogViewButton.Content = "Code";
             return LogViewButton;
         }
-        private CheckBox IsActiveOperationCheckboxInit(VoiceOperation op)
+        private CheckBox IsActiveOperationCheckboxInit(VoiceSetting op)
         {
             var b = new CheckBox();
             b.IsChecked = op.IsActive;
             return b;
         }
-        private void RemoveVoiceOperation(object sender, RoutedEventArgs e)
+        private void RemoveVoiceSetting(object sender, RoutedEventArgs e)
         {
             Button removeButton = (Button)sender;
-            VoiceOperation removedOps = (VoiceOperation)removeButton.DataContext;
-            VoiceOperationRows.Remove(removedOps);
+            VoiceSetting removedOps = (VoiceSetting)removeButton.DataContext;
+            VoiceSettingRows.Remove(removedOps);
             if (removedOps.IsSaved)
             {
                 using (var DataSource = new HelpContext())
                 {
-                    DataSource.VoiceOperationTable.Attach(removedOps);
-                    DataSource.VoiceOperationTable.Remove(removedOps);
+                    DataSource.VoiceSettingTable.Attach(removedOps);
+                    DataSource.VoiceSettingTable.Remove(removedOps);
                     DataSource.SaveChanges();
                 }
             }
         }
-        private void UpdateVoiceOperation(object sender, RoutedEventArgs e)
+        private void UpdateVoiceSetting(object sender, RoutedEventArgs e)
         {
             Button updateButton = (Button)sender;
-            VoiceOperation updateHint = (VoiceOperation)updateButton.DataContext;
+            VoiceSetting updateHint = (VoiceSetting)updateButton.DataContext;
             List<Tag> assosiatedTags = new List<Tag>();
             if (updateHint.IsSaved)
             {
                 using (var DataSource = new HelpContext())
                 {
-                    DataSource.VoiceOperationTable.Attach(updateHint);
-                    DataSource.VoiceOperationTable.Update(updateHint);
+                    DataSource.VoiceSettingTable.Attach(updateHint);
+                    DataSource.VoiceSettingTable.Update(updateHint);
                     DataSource.SaveChanges();
                 }
             }
@@ -91,8 +91,8 @@ namespace voicio.ViewModels
             {
                 using (var DataSource = new HelpContext())
                 {
-                    DataSource.VoiceOperationTable.Attach(updateHint);
-                    DataSource.VoiceOperationTable.Add(updateHint);
+                    DataSource.VoiceSettingTable.Attach(updateHint);
+                    DataSource.VoiceSettingTable.Add(updateHint);
                     DataSource.SaveChanges();
                     updateHint.IsSaved = true;
                 }
@@ -103,7 +103,7 @@ namespace voicio.ViewModels
             var b = new Button();
             b.Background = new SolidColorBrush() { Color = new Color(255, 34, 139, 34) };
             b.Content = "Add";
-            b.Click += UpdateVoiceOperation;
+            b.Click += UpdateVoiceSetting;
             return b;
         }
         private Button RemoveButtonInit()
@@ -111,7 +111,7 @@ namespace voicio.ViewModels
             var b = new Button();
             b.Background = new SolidColorBrush() { Color = new Color(255, 80, 00, 20) };
             b.Content = "Remove";
-            b.Click += RemoveVoiceOperation;
+            b.Click += RemoveVoiceSetting;
             return b;
         }
         private DockPanel ButtonsPanelInit()
@@ -127,17 +127,17 @@ namespace voicio.ViewModels
             var TextColumnLength = new GridLength(1, GridUnitType.Star);
             var TemplateColumnLength = new GridLength(125, GridUnitType.Pixel);
 
-            var EditOptions = new TextColumnOptions<VoiceOperation>
+            var EditOptions = new TextColumnOptions<VoiceSetting>
             {
                 BeginEditGestures = BeginEditGestures.Tap,
                 MinWidth = new GridLength(80, GridUnitType.Pixel)
             };
-            TemplateColumn<VoiceOperation> IsActiveOperationColumn = new TemplateColumn<VoiceOperation>("Enabled", new FuncDataTemplate<VoiceOperation>((a, e) => IsActiveOperationCheckboxInit(a), supportsRecycling: true), width: TemplateColumnLength);
-            TemplateColumn<VoiceOperation> ButtonColumn = new TemplateColumn<VoiceOperation>("", new FuncDataTemplate<VoiceOperation>((a, e) => ButtonsPanelInit(), supportsRecycling: true), width: TemplateColumnLength);
-            TemplateColumn<VoiceOperation> CompileColumn = new TemplateColumn<VoiceOperation>("", new FuncDataTemplate<VoiceOperation>((a, e) => ToggleCompileActionButtonInit(a), supportsRecycling: true), width: TemplateColumnLength);
-            TextColumn<VoiceOperation, string> DescriptionTextColumn = new TextColumn<VoiceOperation, string>("Description", x => x.Description, (r, v) => r.Description = v, options: EditOptions, width: TextColumnLength);
-            TextColumn<VoiceOperation, string> CommandTextColumn = new TextColumn<VoiceOperation, string>("Voice Command", x => x.Command, (r, v) => r.Command = v, options: EditOptions, width: TextColumnLength);
-            VoiceOperationGridData = new FlatTreeDataGridSource<VoiceOperation>(VoiceOperationRows)
+            TemplateColumn<VoiceSetting> IsActiveOperationColumn = new TemplateColumn<VoiceSetting>("Enabled", new FuncDataTemplate<VoiceSetting>((a, e) => IsActiveOperationCheckboxInit(a), supportsRecycling: true), width: TemplateColumnLength);
+            TemplateColumn<VoiceSetting> ButtonColumn = new TemplateColumn<VoiceSetting>("", new FuncDataTemplate<VoiceSetting>((a, e) => ButtonsPanelInit(), supportsRecycling: true), width: TemplateColumnLength);
+            TemplateColumn<VoiceSetting> CompileColumn = new TemplateColumn<VoiceSetting>("", new FuncDataTemplate<VoiceSetting>((a, e) => ToggleCompileActionButtonInit(a), supportsRecycling: true), width: TemplateColumnLength);
+            TextColumn<VoiceSetting, string> DescriptionTextColumn = new TextColumn<VoiceSetting, string>("Description", x => x.Description, (r, v) => r.Description = v, options: EditOptions, width: TextColumnLength);
+            TextColumn<VoiceSetting, string> CommandTextColumn = new TextColumn<VoiceSetting, string>("Voice Command", x => x.Command, (r, v) => r.Command = v, options: EditOptions, width: TextColumnLength);
+            VoiceSettingGridData = new FlatTreeDataGridSource<VoiceSetting>(VoiceSettingRows)
             {
                 Columns =
                     {
@@ -148,20 +148,20 @@ namespace voicio.ViewModels
                         ButtonColumn
                     },
             };
-            VoiceOperationGridData.Selection = new TreeDataGridCellSelectionModel<VoiceOperation>(VoiceOperationGridData);
+            VoiceSettingGridData.Selection = new TreeDataGridCellSelectionModel<VoiceSetting>(VoiceSettingGridData);
         }
         public void ShowAllOperations()
         {
             using (var DataSource = new HelpContext())
             {
-                List<VoiceOperation> voiceOperations = DataSource.VoiceOperationTable.ToList();
-                VoiceOperationRows = new ObservableCollection<VoiceOperation>(voiceOperations);
+                List<VoiceSetting> VoiceSettings = DataSource.VoiceSettingTable.ToList();
+                VoiceSettingRows = new ObservableCollection<VoiceSetting>(VoiceSettings);
             }
             TreeDataGridInit();
         }
-        public VoiceOperationViewModel(CancellationTokenSource cts)
+        public VoiceSettingViewModel(CancellationTokenSource cts)
         {
-            VoiceOperationRows = new ObservableCollection<VoiceOperation>();
+            VoiceSettingRows = new ObservableCollection<VoiceSetting>();
             TreeDataGridInit();
             ShowAllOperations();
         }

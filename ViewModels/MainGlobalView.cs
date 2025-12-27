@@ -17,7 +17,7 @@ namespace voicio.ViewModels
         //private TagWindow tagWindow = null;
         private CancellationTokenSource? _cts;
         public Task? ListenTask;
-        public ReactiveCommand<Unit, Unit> ShowVoiceOperationsCommand { get; }
+        public ReactiveCommand<Unit, Unit> ShowVoiceSettingsCommand { get; }
         public ReactiveCommand<Unit,Unit> OpenMainWindow { get; }
         public ReactiveCommand<Unit, Unit> QuitAppCommand { get; }
         public ReactiveCommand<Unit, Unit> ShowTagsWindowCommand { get; }
@@ -45,8 +45,8 @@ namespace voicio.ViewModels
                 var w1 = new MainWindow() { DataContext = new MainWindowViewModel() };
                 w1.Show();
             });
-            ShowVoiceOperationsCommand = ReactiveCommand.Create(() => {
-                var w2 = new VoiceOperationWindow() { DataContext = new VoiceOperationViewModel(_cts) };
+            ShowVoiceSettingsCommand = ReactiveCommand.Create(() => {
+                var w2 = new VoiceSettingWindow() { DataContext = new VoiceSettingViewModel(_cts) };
                 w2.Show();
             });
             ShowImportWindowCommand = ReactiveCommand.Create(() => {

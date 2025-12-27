@@ -11,7 +11,7 @@ namespace voicio.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "VoiceOperationTable",
+                name: "VoiceSettingTable",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -23,7 +23,7 @@ namespace voicio.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_VoiceOperationTable", x => x.Id);
+                    table.PrimaryKey("PK_VoiceSettingTable", x => x.Id);
                 });
         }
 
@@ -31,7 +31,7 @@ namespace voicio.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "VoiceOperationTable");
+                name: "VoiceSettingTable");
         }
     }
 }

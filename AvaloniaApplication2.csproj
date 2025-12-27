@@ -51,4 +51,11 @@
     <PackageReference Include="System.Speech" Version="9.0.0" />
     <PackageReference Include="Vosk" Version="0.3.38" />
   </ItemGroup>
+
+
+  <ItemGroup>
+    <Compile Update="Views\VoiceSettingWindow.axaml.cs">
+      <DependentUpon>VoiceSettingWindow.axaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
 </Project>

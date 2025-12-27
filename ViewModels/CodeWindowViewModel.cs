@@ -17,7 +17,7 @@ namespace voicio.ViewModels
 {
     public class CodeWindowViewModel : ViewModelBase
     {
-        public VoiceOperation bindedObject;
+        public VoiceSetting bindedObject;
         private string _TitleText = "";
         public string TitleText
         {
@@ -67,8 +67,8 @@ namespace voicio.ViewModels
                 {
                     using (var DataSource = new HelpContext())
                     {
-                        DataSource.VoiceOperationTable.Attach(bindedObject);
-                        DataSource.VoiceOperationTable.Update(bindedObject);
+                        DataSource.VoiceSettingTable.Attach(bindedObject);
+                        DataSource.VoiceSettingTable.Update(bindedObject);
                         DataSource.SaveChanges();
                     }
                 }
@@ -76,8 +76,8 @@ namespace voicio.ViewModels
                 {
                     using (var DataSource = new HelpContext())
                     {
-                        DataSource.VoiceOperationTable.Attach(bindedObject);
-                        DataSource.VoiceOperationTable.Add(bindedObject);
+                        DataSource.VoiceSettingTable.Attach(bindedObject);
+                        DataSource.VoiceSettingTable.Add(bindedObject);
                         DataSource.SaveChanges();
                         bindedObject.IsSaved = true;
                     }
@@ -85,7 +85,7 @@ namespace voicio.ViewModels
             }
         }
         public ReactiveCommand<Unit, Unit> CompileCommand { get; }
-        public CodeWindowViewModel(VoiceOperation obj) {
+        public CodeWindowViewModel(VoiceSetting obj) {
             CompileCommand = ReactiveCommand.Create(Compile);
             bindedObject = obj;
             if (obj.SourceCode is null) obj.SourceCode = "";
