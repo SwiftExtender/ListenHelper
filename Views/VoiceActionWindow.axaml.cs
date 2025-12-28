@@ -1,25 +1,23 @@
 using Avalonia.Controls;
+using Avalonia.ReactiveUI;
 using System.Threading;
+using voicio.ViewModels;
 
 namespace voicio;
 
-public partial class VoiceActionWindow : Window
+public partial class VoiceActionWindow : ReactiveWindow<VoiceActionViewModel>
 {
     public VoiceActionWindow()
     {
         InitializeComponent();
-        this.WhenActivated(disposables =>
-        {
-            // Handle the interaction request
-            ViewModel.ShowConfirmationDialog.RegisterHandler(async interaction =>
-            {
-                // View-specific code to show the dialog
-                var dialog = new ConfirmationDialog(interaction.Input);
-                var result = await dialog.ShowAsync(TopLevel.GetTopLevel(this));
-                interaction.SetOutput(result);
-            }).DisposeWith(disposables);
-        });
-        Thread.Sleep(1000);
+        //ViewModel.RedirectToSearchResult.RegisterHandler(async interaction =>
+        //{
+        //    // View-specific code to show the dialog
+        //    var dialog = new ConfirmationDialog(interaction.Input);
+        //    var result = await dialog.ShowAsync(TopLevel.GetTopLevel(this));
+        //    interaction.SetOutput(result);
+        //});
+        Thread.Sleep(3000);
         Close();
     }
 }

@@ -31,20 +31,19 @@ namespace voicio.Models
             Microphone.DataAvailable += DataAvailableEvent;
             
         }
-        public void RecordLoop(CancellationToken token)
+        public void RecordLoopForAssistantCall(CancellationToken token)
         {
             try
             {
                 CustomStream = new MemoryStream();
                 CustomWaveProvider = new WaveFileWriter(CustomStream, Microphone.WaveFormat) { };
                 Microphone.StartRecording();
-                Thread.Sleep(7 * 1000);
+                Thread.Sleep(3 * 1000);
                 Microphone.StopRecording();
                 // Poll token periodically (NAudio doesn't auto-check it)
                 while (!token.IsCancellationRequested)
                 {
                     token.ThrowIfCancellationRequested();
-                    Thread.Sleep(50);
                     var audioData = GetByteArray();
                     string model_path = AppContext.BaseDirectory + "voice_model";
                     var recognition = new SpeechRecognition(model_path, GetRecorderSampleRate());

@@ -1,6 +1,10 @@
-﻿using ReactiveUI;
+﻿using Newtonsoft.Json.Linq;
+using ReactiveUI;
+using System;
 using System.Reactive.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using voicio.Models;
 
 namespace voicio.ViewModels
 {
@@ -19,12 +23,15 @@ namespace voicio.ViewModels
             get => _Exception;
             set => this.RaiseAndSetIfChanged(ref _Exception, value);
         }
-        public async Task<bool> ConfirmAction()
+        public async Task<bool> SearchAction(byte[] temp_speech_buf)
         {
+            string model_path = AppContext.BaseDirectory + "voice_model";
+            //var recognition = new SpeechRecognition(model_path, recorder.GetRecorderSampleRate());
+            //JObject rss = JObject.Parse(recognition.Recognize(temp_speech_buf));
+            //Query = rss.Properties().Last().Value.ToString();
 
-
-            var result = await RedirectToSearchResult.Handle(true);
-            return result;
+            return await RedirectToSearchResult.Handle(true);
+            return await RedirectToSearchResult.Handle(false);
         }
         public VoiceActionViewModel(string query) {
             Query = query;

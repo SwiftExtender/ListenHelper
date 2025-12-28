@@ -1,28 +1,29 @@
-﻿using ReactiveUI;
-using voicio.Models;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using Avalonia.Threading;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Models.TreeDataGrid;
 using Avalonia.Controls.Selection;
 using Avalonia.Controls.Templates;
-using DynamicData;
 using Avalonia.Interactivity;
 using Avalonia.Media;
-using System.Reactive;
-using System.Threading.Tasks;
+using Avalonia.Threading;
+using DynamicData;
 using Newtonsoft.Json.Linq;
-using System.Reactive.Linq;
+using ReactiveUI;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Reactive;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
+using voicio.Models;
 
 namespace voicio.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
         private InteractiveAudioRecorder recorder;
-        private System.Timers.Timer RecordTimer;
+        //private System.Timers.Timer RecordTimer;
         private TaskCompletionSource<bool> voiceSearchTask;
         private ObservableCollection<string>? _LastSearches;
         public ObservableCollection<string>? LastSearches
@@ -319,6 +320,13 @@ namespace voicio.ViewModels
             HintsRows = new ObservableCollection<Hint>();
             LastSearches = new ObservableCollection<string>();
             TreeDataGridInit();
+            List<Hint> hints = new List<Hint>();
+            using (var DataSource = new HelpContext())
+            {
+                hints.Add(DataSource.HintTable);
+                HintsRows = new ObservableCollection<Hint>(hints.Distinct());
+            }
+                
         }
     }
 }
