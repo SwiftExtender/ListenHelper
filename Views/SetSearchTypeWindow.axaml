@@ -1,0 +1,16 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:vm="using:voicio.ViewModels"
+		x:DataType="vm:SetSearchTypeWindowViewModel"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="voicio.SetSearchTypeWindow"
+        Title="SetSearchTypeWindow">
+	<Border BorderThickness="1.5" BorderBrush="#D2B1A38E" IsVisible="True">
+		<DockPanel>
+			<Label Margin="10,5,10,0" BorderBrush="White" Content="{Binding SearchType}" >Tags</Label>
+			<TextBox Text="{Binding Exception}"></TextBox>
+		</DockPanel>
+	</Border>
+</Window>

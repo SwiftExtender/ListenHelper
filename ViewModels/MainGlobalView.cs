@@ -6,7 +6,7 @@ using System;
 using System.Reactive;
 using System.Threading;
 using System.Threading.Tasks;
-using voicio.Models;
+using voicio.SpeechService;
 using voicio.Views;
 
 namespace voicio.ViewModels

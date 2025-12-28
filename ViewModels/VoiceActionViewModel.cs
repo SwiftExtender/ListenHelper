@@ -1,10 +1,7 @@
-﻿using Newtonsoft.Json.Linq;
-using ReactiveUI;
+﻿using ReactiveUI;
 using System;
 using System.Reactive.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using voicio.Models;
 
 namespace voicio.ViewModels
 {
@@ -31,10 +28,25 @@ namespace voicio.ViewModels
             //Query = rss.Properties().Last().Value.ToString();
 
             return await RedirectToSearchResult.Handle(true);
-            return await RedirectToSearchResult.Handle(false);
         }
-        public VoiceActionViewModel(string query) {
-            Query = query;
+        public void ProcessAction()
+        {
+            if (_Exception != "")
+            {
+
+            }
+        }
+        public VoiceActionViewModel(bool flag, string query)
+        {
+            if (flag)
+            {
+
+            }
+            else 
+            {
+
+            }
+            ProcessAction();
         }
     }
 }

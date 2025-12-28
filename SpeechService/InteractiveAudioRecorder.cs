@@ -1,7 +1,7 @@
 ﻿using NAudio.Wave;
 using System.IO;
 
-namespace voicio.Models
+namespace voicio.SpeechService
 {
     public class InteractiveAudioRecorder
     {
@@ -26,7 +26,7 @@ namespace voicio.Models
         }
         public float GetRecorderSampleRate()
         {
-            return (float)Microphone.WaveFormat.SampleRate;
+            return Microphone.WaveFormat.SampleRate;
         }
         public InteractiveAudioRecorder()
         {

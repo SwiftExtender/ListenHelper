@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace voicio.Models
+namespace voicio.SpeechService
 {
     public class VoicePlugin
     {

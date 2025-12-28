@@ -17,6 +17,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using voicio.Models;
+using voicio.SpeechService;
 
 namespace voicio.ViewModels
 {
@@ -120,34 +121,34 @@ namespace voicio.ViewModels
             }
         }
         public ReactiveCommand<Unit, Unit> StartSearchCommand { get; }
-        public ReactiveCommand<Unit, Unit> StartVoiceSearchCommand { get; }   
-        public void StartVoiceSearch()
-        {
-            if (!IsVoiceSearching)
-            {
-                IsVoiceSearching = true;
-                recorder = new InteractiveAudioRecorder();
-                Dispatcher.UIThread.Invoke(() =>
-                {
-                    recorder.StartRecord();
-                });
-            } else
-            {
-                Dispatcher.UIThread.Invoke(() =>
-                {
-                    recorder.StopRecord();
-                    var temp_speech_buf = recorder.GetByteArray();
-                    string model_path = AppContext.BaseDirectory + "voice_model";
-                    var recognition = new SpeechRecognition(model_path, recorder.GetRecorderSampleRate());
-                    JObject rss = JObject.Parse(recognition.Recognize(temp_speech_buf));
-                    Query = rss.Properties().Last().Value.ToString();
-                });
+        //public ReactiveCommand<Unit, Unit> StartVoiceSearchCommand { get; }   
+        //public void StartVoiceSearch()
+        //{
+        //    if (!IsVoiceSearching)
+        //    {
+        //        IsVoiceSearching = true;
+        //        recorder = new InteractiveAudioRecorder();
+        //        Dispatcher.UIThread.Invoke(() =>
+        //        {
+        //            recorder.StartRecord();
+        //        });
+        //    } else
+        //    {
+        //        Dispatcher.UIThread.Invoke(() =>
+        //        {
+        //            recorder.StopRecord();
+        //            var temp_speech_buf = recorder.GetByteArray();
+        //            string model_path = AppContext.BaseDirectory + "voice_model";
+        //            var recognition = new SpeechRecognition(model_path, recorder.GetRecorderSampleRate());
+        //            JObject rss = JObject.Parse(recognition.Recognize(temp_speech_buf));
+        //            Query = rss.Properties().Last().Value.ToString();
+        //        });
                 
-                StartSearch();
-                IsVoiceSearching = false;
+        //        StartSearch();
+        //        IsVoiceSearching = false;
                 
-            }
-        }
+        //    }
+        //}
         private void RemoveHint(object sender, RoutedEventArgs e)
         {
             Button removeButton = (Button)sender;
@@ -316,7 +317,7 @@ namespace voicio.ViewModels
         {
             StartSearchCommand = ReactiveCommand.Create(StartSearch);
             //StartVoiceSearchCommand = ReactiveCommand.CreateFromTask(StartVoiceSearch);
-            StartVoiceSearchCommand = ReactiveCommand.Create(StartVoiceSearch);
+            //StartVoiceSearchCommand = ReactiveCommand.Create(StartVoiceSearch);
             LastSearches = new ObservableCollection<string>();
             List<Hint> hints = new List<Hint>();
             using (var DataSource = new HelpContext())
