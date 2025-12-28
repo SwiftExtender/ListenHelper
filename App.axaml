@@ -17,8 +17,8 @@
 					  ToolTipText="App" Command="{Binding OpenMainWindow}">
 				<TrayIcon.Menu>
 					<NativeMenu>
-						<NativeMenuItem Header="Notes" Command="{Binding ShowTagsWindowCommand}">
-						</NativeMenuItem>
+						<!--<NativeMenuItem Header="Notes" Command="{Binding ShowTagsWindowCommand}">
+						</NativeMenuItem>-->
 						<NativeMenuItem Header="Voice settings" Command="{Binding ShowVoiceSettingsCommand}">
 						</NativeMenuItem>
 						<NativeMenuItem Header="Import" Command="{Binding ShowImportWindowCommand}">

@@ -97,7 +97,7 @@
 		</DockPanel>
 		<DockPanel HorizontalAlignment="Stretch">
 				<Button Width="340" Height="40" Command="{Binding StartSearchCommand}" Content="Search" Margin="10,10,20,10" Background="RoyalBlue" IsDefault="True"></Button>
-				<Button Width="160" Height="40" Command="{Binding StartVoiceSearch}" Margin="15,10,15,10" Classes.active="{Binding IsVoiceSearching}" Classes.idle="{Binding !IsVoiceSearching}">
+			<!--<Button Width="160" Height="40" Command="{Binding StartVoiceSearch}" Margin="15,10,15,10" Classes.active="{Binding IsVoiceSearching}" Classes.idle="{Binding !IsVoiceSearching}">
 				<Button.Styles>
 					<Style Selector="Button.idle">
 						<Setter Property="Background" Value="#C37B24D4" />
@@ -108,7 +108,7 @@
 						<Setter Property="Content" Value="Listening..." />
 					</Style>	
 				</Button.Styles>
-			</Button>
+			</Button>-->
 			<Button Height="40" IsVisible="{Binding IsAddButtonVisible, Mode = TwoWay}" Command="{Binding AddTempHint}" Content="Add" Margin="15,10,15,10" Background="#D538A669" Width="80"></Button>
 			<ToggleButton IsChecked="{Binding IsGridEditable, Mode = TwoWay}" Width="100" Classes="EditingMode" Height="40" Margin="15,10,0,10"></ToggleButton>
 		</DockPanel>

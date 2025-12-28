@@ -317,16 +317,14 @@ namespace voicio.ViewModels
             StartSearchCommand = ReactiveCommand.Create(StartSearch);
             //StartVoiceSearchCommand = ReactiveCommand.CreateFromTask(StartVoiceSearch);
             StartVoiceSearchCommand = ReactiveCommand.Create(StartVoiceSearch);
-            HintsRows = new ObservableCollection<Hint>();
             LastSearches = new ObservableCollection<string>();
-            TreeDataGridInit();
             List<Hint> hints = new List<Hint>();
             using (var DataSource = new HelpContext())
             {
-                hints.Add(DataSource.HintTable);
+                hints.Add(DataSource.HintTable.ToList());
                 HintsRows = new ObservableCollection<Hint>(hints.Distinct());
             }
-                
+            TreeDataGridInit();
         }
     }
 }
