@@ -23,7 +23,7 @@ namespace voicio.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        private InteractiveAudioRecorder recorder;
+        //private InteractiveAudioRecorder recorder;
         //private System.Timers.Timer RecordTimer;
         private TaskCompletionSource<bool> voiceSearchTask;
         private ObservableCollection<string>? _LastSearches;

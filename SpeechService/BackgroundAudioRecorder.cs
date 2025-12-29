@@ -1,9 +1,10 @@
-﻿using NAudio.Wave;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
+using OpenTK.Audio.OpenAL;
 using System;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using voicio.ViewModels;
 using voicio.Views;
@@ -22,32 +23,24 @@ namespace voicio.SpeechService
         private const string StrictSearchWord = "strict";
 
         private CancellationTokenSource _cancellationTokenSource;
-        private readonly WaveInEvent Microphone;
-        //private readonly int _sampleRate = 16000;
-        //private readonly int _chunkDurationMs = 1000;
+        private readonly ALCaptureDevice Microphone;
+        private readonly int _chunkDurationMs = 1000;
         private Timer recordingTimer;
-        private WaveFileWriter CustomWaveProvider;
         private MemoryStream CustomStream;
 
         private string _searchType = "strict";
         private string signalFolderPath = AppContext.BaseDirectory + "Assets" + Path.DirectorySeparatorChar + "Signals" + Path.DirectorySeparatorChar;
-        public BackgroundAudioRecorder() {
+        public BackgroundAudioRecorder(int sampleRate) {
+            Microphone = ALC.CaptureOpenDevice(null, sampleRate, ALFormat.Mono16, bufferSize / (channels * bits / 8));
+            //Microphone.DataAvailable += DataAvailableEvent;
 
-            Microphone = new WaveInEvent()
-            {
-                WaveFormat = new WaveFormat(rate: 48000, bits: 16, channels: 1),
-                DeviceNumber = 0,
-                BufferMilliseconds = 3500,
-            };
-            Microphone.DataAvailable += DataAvailableEvent;
-            
         }
         public void StartRecord(int ms) {
-            CustomStream = new MemoryStream();
-            CustomWaveProvider = new WaveFileWriter(CustomStream, Microphone.WaveFormat) { };
-            Microphone.StartRecording();
-            recordingTimer = new Timer(ms);
-            recordingTimer.Elapsed += (s, e) => Microphone.StopRecording();
+            //CustomStream = new MemoryStream();
+            //CustomWaveProvider = new WaveFileWriter(CustomStream, Microphone.WaveFormat) { };
+            //Microphone.StartRecording();
+            //recordingTimer = new Timer(ms);
+            //recordingTimer.Elapsed += (s, e) => Microphone.StopRecording();
         }
         public string Recognizing(bool wordsFlag, int maxAlternatives)
         {
@@ -60,17 +53,14 @@ namespace voicio.SpeechService
 
         public void InitWordError()
         {
-            using var audioFile = new AudioFileReader(signalFolderPath + "initworderror.mp3");
-            using var outputDevice = new WaveOutEvent();
-            outputDevice.Init(audioFile);
-            outputDevice.Play();
+            
+            //var audioFile = new AudioFileReader(signalFolderPath + "initworderror.mp3") { ReadTimeout = 5 };
+              
+            
         }
         public void SecondWordError()
         {
-            using var audioFile = new AudioFileReader(signalFolderPath + "secondworderror.mp3");
-            using var outputDevice = new WaveOutEvent();
-            outputDevice.Init(audioFile);
-            outputDevice.Play();
+            
         }
         public void RecordLoopForAssistantCall(CancellationToken token)
         {
@@ -125,17 +115,18 @@ namespace voicio.SpeechService
         }
         public float GetRecorderSampleRate()
         {
-            return Microphone.WaveFormat.SampleRate;
+            return 0.1f;
+            //return Microphone.WaveFormat.SampleRate;
         }
-        private async void DataAvailableEvent(object sender, WaveInEventArgs e)
-        {
-            CustomWaveProvider.Write(e.Buffer, 0, e.BytesRecorded);
-        }
+        //private async void DataAvailableEvent(object sender, WaveInEventArgs e)
+        //{
+        //    //CustomWaveProvider.Write(e.Buffer, 0, e.BytesRecorded);
+        //}
         public void Dispose()
         {
             _cancellationTokenSource?.Cancel();
-            Microphone?.StopRecording();
-            Microphone?.Dispose();
+            //Microphone?.StopRecording();
+            //Microphone?.Dispose();
         }
     }
 }
