@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:bh="using:voicio.ViewModels"
 		x:Class="voicio.Views.VoiceSettingWindow"
-		x:DataType="vm:VoiceSettingViewModel"
+		x:DataType="vm:VoiceSettingWindowViewModel"
 		Name="VoiceSettingManageWindow"
 		Background="#1A1A1A"
 		Title="Voice Operations"

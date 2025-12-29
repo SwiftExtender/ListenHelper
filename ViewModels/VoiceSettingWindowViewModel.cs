@@ -14,7 +14,7 @@ using System.Threading;
 
 namespace voicio.ViewModels
 {
-    public class VoiceSettingViewModel : ViewModelBase
+    public class VoiceSettingWindowViewModel : ViewModelBase
     {
         private bool _IsPinnedWindow = false;
         public bool IsPinnedWindow
@@ -159,7 +159,7 @@ namespace voicio.ViewModels
             }
             TreeDataGridInit();
         }
-        public VoiceSettingViewModel(CancellationTokenSource cts)
+        public VoiceSettingWindowViewModel(CancellationTokenSource cts)
         {
             VoiceSettingRows = new ObservableCollection<VoiceSetting>();
             TreeDataGridInit();

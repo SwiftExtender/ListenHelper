@@ -20,7 +20,9 @@
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
   </ItemGroup>
-
+  <ItemGroup>
+     <Content Include="Assets\**\*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="11.2.3" />
@@ -52,10 +54,4 @@
     <PackageReference Include="Vosk" Version="0.3.38" />
   </ItemGroup>
 
-
-  <ItemGroup>
-    <Compile Update="Views\VoiceSettingWindow.axaml.cs">
-      <DependentUpon>VoiceSettingWindow.axaml</DependentUpon>
-    </Compile>
-  </ItemGroup>
 </Project>

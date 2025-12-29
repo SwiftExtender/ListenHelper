@@ -46,7 +46,7 @@ namespace voicio.ViewModels
                 w1.Show();
             });
             ShowVoiceSettingsCommand = ReactiveCommand.Create(() => {
-                var w2 = new VoiceSettingWindow() { DataContext = new VoiceSettingViewModel(_cts) };
+                var w2 = new VoiceSettingWindow() { DataContext = new VoiceSettingWindowViewModel(_cts) };
                 w2.Show();
             });
             ShowImportWindowCommand = ReactiveCommand.Create(() => {

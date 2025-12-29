@@ -4,9 +4,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:vm="using:voicio.ViewModels"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="voicio.VoiceActionWindow"
-		x:DataType="vm:VoiceActionViewModel"
-        Title="VoiceActionWindow">
+        x:Class="voicio.Views.VoiceActionWindow"
+		x:DataType="vm:VoiceActionWindowViewModel"
+        Title="Voice Action">
 	<Window.Styles>
 		<Style Selector="TreeDataGridRow">
 			<Setter Property="Height" Value="30"/>
@@ -63,7 +63,7 @@
 	</Window.Styles>
 	<Border BorderThickness="1.5" BorderBrush="#D2B1A38E" IsVisible="True">
 		<DockPanel>
-			<Label Margin="10,5,10,0" BorderBrush="White" Content="{Binding Query}" >Tags</Label>
+			<Label Margin="10,5,10,0" BorderBrush="White" Content="{Binding Query}">Tags</Label>
 			<TextBox Text="{Binding Exception}"></TextBox>
 			<Button Content="Cancel action"></Button>
 		</DockPanel>

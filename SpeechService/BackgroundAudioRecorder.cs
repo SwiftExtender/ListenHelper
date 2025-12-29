@@ -13,7 +13,14 @@ namespace voicio.SpeechService
 {
     public class BackgroundAudioRecorder
     {
-        private WasapiLoopbackCapture _capture;
+        //init word
+        private const string VoiceSearchWord = "search";
+        private const string VoiceExecuteWord = "execute";
+        private const string SetSearchTypeWord = "type";
+        //search types
+        private const string FuzzySearchWord = "fuzzy";
+        private const string StrictSearchWord = "strict";
+
         private CancellationTokenSource _cancellationTokenSource;
         private readonly WaveInEvent Microphone;
         //private readonly int _sampleRate = 16000;
@@ -22,8 +29,8 @@ namespace voicio.SpeechService
         private WaveFileWriter CustomWaveProvider;
         private MemoryStream CustomStream;
 
-        public event EventHandler WakeWordDetected;
-
+        private string _searchType = "strict";
+        private string signalFolderPath = AppContext.BaseDirectory + "Assets" + Path.DirectorySeparatorChar + "Signals" + Path.DirectorySeparatorChar;
         public BackgroundAudioRecorder() {
 
             Microphone = new WaveInEvent()
@@ -35,27 +42,76 @@ namespace voicio.SpeechService
             Microphone.DataAvailable += DataAvailableEvent;
             
         }
+        public void StartRecord(int ms) {
+            CustomStream = new MemoryStream();
+            CustomWaveProvider = new WaveFileWriter(CustomStream, Microphone.WaveFormat) { };
+            Microphone.StartRecording();
+            recordingTimer = new Timer(ms);
+            recordingTimer.Elapsed += (s, e) => Microphone.StopRecording();
+        }
+        public string Recognizing(bool wordsFlag, int maxAlternatives)
+        {
+            var audioData = GetByteArray();
+            string model_path = AppContext.BaseDirectory + "voice_model";
+            var recognition = new SpeechRecognition(model_path, GetRecorderSampleRate(), wordsFlag, maxAlternatives);
+            JObject rss = JObject.Parse(recognition.Recognize(audioData));
+            return rss.Properties().Last().Value.ToString().ToLower();
+        }
+
+        public void InitWordError()
+        {
+            using var audioFile = new AudioFileReader(signalFolderPath + "initworderror.mp3");
+            using var outputDevice = new WaveOutEvent();
+            outputDevice.Init(audioFile);
+            outputDevice.Play();
+        }
+        public void SecondWordError()
+        {
+            using var audioFile = new AudioFileReader(signalFolderPath + "secondworderror.mp3");
+            using var outputDevice = new WaveOutEvent();
+            outputDevice.Init(audioFile);
+            outputDevice.Play();
+        }
         public void RecordLoopForAssistantCall(CancellationToken token)
         {
             try
             {
-                CustomStream = new MemoryStream();
-                CustomWaveProvider = new WaveFileWriter(CustomStream, Microphone.WaveFormat) { };
-                Microphone.StartRecording();
-                recordingTimer = new Timer(3000);
-                recordingTimer.Elapsed += (s, e) => Microphone.StopRecording();
+                StartRecord(3000);
                 while (!token.IsCancellationRequested)
                 {
                     token.ThrowIfCancellationRequested();
-                    var audioData = GetByteArray();
-                    string model_path = AppContext.BaseDirectory + "voice_model";
-                    var recognition = new SpeechRecognition(model_path, GetRecorderSampleRate(), false, 0);
-                    JObject rss = JObject.Parse(recognition.Recognize(audioData));
-                    if (rss.Properties().Last().Value.ToString().ToLower() == "search") {
-                        var redirectWindow = new VoiceActionWindow() { DataContext = new VoiceActionViewModel() };
-                        redirectWindow.Show();
-                    }
-                    Console.WriteLine(rss.ToString());
+                    //keyword processing
+                    switch (Recognizing(false, 0))
+                    {
+                        case VoiceSearchWord:
+                            StartRecord(2000);
+                            string secondWordForSearch = Recognizing(false, 0);
+                            var redirectSearchWindow = new VoiceActionWindow() { DataContext = new VoiceActionWindowViewModel(false, secondWordForSearch) };
+                            redirectSearchWindow.Show();
+                            break;
+                        case VoiceExecuteWord:
+                            StartRecord(2000);
+                            string secondWordForExecute = Recognizing(false, 0);
+                            var redirectExecuteWindow = new VoiceActionWindow() { DataContext = new VoiceActionWindowViewModel(true, secondWordForExecute) };
+                            redirectExecuteWindow.Show();
+                            break;
+                        case SetSearchTypeWord:
+                            StartRecord(2000);
+                            string secondWordForType = Recognizing(false, 0);
+                            if (secondWordForType == FuzzySearchWord || secondWordForType == StrictSearchWord)
+                            {
+                                _searchType = secondWordForType;
+                                var redirectSetSearchTypeWindow = new SetSearchTypeWindow() { DataContext = new SetSearchTypeWindowViewModel(secondWordForType) };
+                                redirectSetSearchTypeWindow.Show();
+                            }
+                            else {
+                                SecondWordError();
+                            }
+                            break;
+                        default:
+                            InitWordError();
+                            break;
+                    }     
                 }
             }
             finally
@@ -78,8 +134,8 @@ namespace voicio.SpeechService
         public void Dispose()
         {
             _cancellationTokenSource?.Cancel();
-            _capture?.StopRecording();
-            _capture?.Dispose();
+            Microphone?.StopRecording();
+            Microphone?.Dispose();
         }
     }
 }

@@ -3,9 +3,9 @@ using Avalonia.ReactiveUI;
 using System.Threading;
 using voicio.ViewModels;
 
-namespace voicio;
+namespace voicio.Views;
 
-public partial class VoiceActionWindow : ReactiveWindow<VoiceActionViewModel>
+public partial class VoiceActionWindow : Window
 {
     public VoiceActionWindow()
     {
@@ -17,7 +17,7 @@ public partial class VoiceActionWindow : ReactiveWindow<VoiceActionViewModel>
         //    var result = await dialog.ShowAsync(TopLevel.GetTopLevel(this));
         //    interaction.SetOutput(result);
         //});
-        Thread.Sleep(3000);
-        Close();
+        //Thread.Sleep(3000);
+        //Close();
     }
 }

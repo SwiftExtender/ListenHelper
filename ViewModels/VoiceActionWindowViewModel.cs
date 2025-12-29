@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace voicio.ViewModels
 {
-    public class VoiceActionViewModel : ViewModelBase
+    public class VoiceActionWindowViewModel : ViewModelBase
     {
         public Interaction<bool, bool> RedirectToSearchResult { get; } = new Interaction<bool, bool>();
         private string _Query = "";
@@ -36,9 +36,9 @@ namespace voicio.ViewModels
 
             }
         }
-        public VoiceActionViewModel(bool flag, string query)
+        public VoiceActionWindowViewModel(bool isExecute, string query)
         {
-            if (flag)
+            if (isExecute)
             {
 
             }

@@ -1,16 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ReactiveUI;
 
 namespace voicio.ViewModels
 {
-    public class SetSearchTypeWindowViewModel
+    public class SetSearchTypeWindowViewModel : ViewModelBase
     {
-        public SetSearchTypeWindowViewModel()
+        private string? _SearchType;
+        public string? SearchType
         {
-
+            get => _SearchType;
+            set => this.RaiseAndSetIfChanged(ref _SearchType, value);
+        }
+        public SetSearchTypeWindowViewModel(string searchType)
+        {
+            SearchType = searchType;
         }
     }
 }
