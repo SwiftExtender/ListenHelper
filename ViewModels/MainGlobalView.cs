@@ -1,8 +1,11 @@
 ﻿using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
+using Newtonsoft.Json.Linq;
 using ReactiveUI;
 using System;
+using System.IO;
+using System.Linq;
 using System.Reactive;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,10 +14,23 @@ using voicio.Views;
 
 namespace voicio.ViewModels
 {
+
     public class MainGlobalView: ViewModelBase
     {
         //private ImportWindow importWindow = null;
         //private TagWindow tagWindow = null;
+
+        //init word
+        public const string VoiceSearchWord = "search";
+        public const string VoiceExecuteWord = "execute";
+        public const string SetSearchTypeWord = "type";
+        //search types
+        public const string FuzzySearchWord = "fuzzy";
+        public const string StrictSearchWord = "strict";
+
+        private string _searchType = "strict";
+        //sound signal folder
+        private string signalFolderPath = AppContext.BaseDirectory + "Assets" + Path.DirectorySeparatorChar + "Signals" + Path.DirectorySeparatorChar;
         private CancellationTokenSource? _cts;
         public Task? ListenTask;
         public ReactiveCommand<Unit, Unit> ShowVoiceSettingsCommand { get; }
@@ -22,22 +38,63 @@ namespace voicio.ViewModels
         public ReactiveCommand<Unit, Unit> QuitAppCommand { get; }
         public ReactiveCommand<Unit, Unit> ShowTagsWindowCommand { get; }
         public ReactiveCommand<Unit, Unit> ShowImportWindowCommand { get; }
+        public string GetRecognizeTextResult(byte[] audioData, bool wordsFlag, int maxAlternatives, float sampleRate)
+        {
+            string model_path = AppContext.BaseDirectory + "voice_model";
+            var recognition = new SpeechRecognition(model_path, sampleRate, wordsFlag, maxAlternatives);
+            JObject rss = JObject.Parse(recognition.Recognize(audioData));
+            return rss.Properties().Last().Value.ToString().ToLower();
+        }
         public void StartListenService(CancellationToken token)
         {
-            //try
-            //{
-            //    BackgroundAudioRecorder rec = new BackgroundAudioRecorder();
-            //    while (!token.IsCancellationRequested)
-            //    {
-            //        rec.RecordLoopForAssistantCall(token);
-            //        //Dispatcher.UIThread.Post(() => { /* update property */ });
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    Console.WriteLine(ex.ToString());
-            //    //return false;
-            //}
+            BackgroundAudioRecorder rec = new BackgroundAudioRecorder() {};
+            float sampleRate = rec.GetRecorderSampleRate();
+            //SpeechRecognition recognition = new SpeechRecognition(model_path, GetRecorderSampleRate(), wordsFlag, maxAlternatives);
+            try
+            {
+                byte[] audio = rec.StartRecord(3);
+                while (!token.IsCancellationRequested)
+                {
+                    token.ThrowIfCancellationRequested();
+                    //keyword processing
+                    switch (GetRecognizeTextResult(audio, false, 0, sampleRate))
+                    {
+                        case VoiceSearchWord:
+                            rec.StartRecord(2);
+                            string secondWordForSearch = GetRecognizeTextResult(audio, false, 0, sampleRate);
+                            var redirectSearchWindow = new VoiceActionWindow() { DataContext = new VoiceActionWindowViewModel(false, secondWordForSearch) };
+                            redirectSearchWindow.Show();
+                            break;
+                        case VoiceExecuteWord:
+                            rec.StartRecord(2);
+                            string secondWordForExecute = GetRecognizeTextResult(audio, false, 0, sampleRate);
+                            var redirectExecuteWindow = new VoiceActionWindow() { DataContext = new VoiceActionWindowViewModel(true, secondWordForExecute) };
+                            redirectExecuteWindow.Show();
+                            break;
+                        case SetSearchTypeWord:
+                            rec.StartRecord(2);
+                            string secondWordForType = GetRecognizeTextResult(audio, false, 0, sampleRate);
+                            if (secondWordForType == FuzzySearchWord || secondWordForType == StrictSearchWord)
+                            {
+                                _searchType = secondWordForType;
+                                var redirectSetSearchTypeWindow = new SetSearchTypeWindow() { DataContext = new SetSearchTypeWindowViewModel(secondWordForType) };
+                                redirectSetSearchTypeWindow.Show();
+                            }
+                            else
+                            {
+                                rec.SecondWordError();
+                            }
+                            break;
+                        default:
+                            rec.InitWordError();
+                            break;
+                    }
+                }
+            }
+            finally
+            {
+                //Dispose();
+            }
 
         }
         public MainGlobalView() {

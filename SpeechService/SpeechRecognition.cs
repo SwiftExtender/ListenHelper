@@ -18,7 +18,8 @@ namespace voicio.SpeechService
             }
             return rec.FinalResult();
         }
-        public SpeechRecognition(string modelpath, float samplerate, bool wordsFlag, int maxAlternatives) {
+        public SpeechRecognition(string modelpath, float samplerate, bool wordsFlag, int maxAlternatives)
+        {
             Model model = new Model(modelpath);
             rec = new VoskRecognizer(model, samplerate);
             rec.SetWords(wordsFlag); //for keyword better false
