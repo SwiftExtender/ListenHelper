@@ -24,20 +24,20 @@ namespace voicio.ViewModels
         public ReactiveCommand<Unit, Unit> ShowImportWindowCommand { get; }
         public void StartListenService(CancellationToken token)
         {
-            try
-            {
-                BackgroundAudioRecorder rec = new BackgroundAudioRecorder();
-                while (!token.IsCancellationRequested)
-                {
-                    rec.RecordLoopForAssistantCall(token);
-                    //Dispatcher.UIThread.Post(() => { /* update property */ });
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-                //return false;
-            }
+            //try
+            //{
+            //    BackgroundAudioRecorder rec = new BackgroundAudioRecorder();
+            //    while (!token.IsCancellationRequested)
+            //    {
+            //        rec.RecordLoopForAssistantCall(token);
+            //        //Dispatcher.UIThread.Post(() => { /* update property */ });
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine(ex.ToString());
+            //    //return false;
+            //}
 
         }
         public MainGlobalView() {

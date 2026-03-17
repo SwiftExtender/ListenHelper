@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using OpenTK.Audio.OpenAL;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -23,25 +24,43 @@ namespace voicio.SpeechService
         private const string StrictSearchWord = "strict";
 
         private CancellationTokenSource _cancellationTokenSource;
-        private readonly ALCaptureDevice Microphone;
+        private readonly ALCaptureDevice _microphone;
         private readonly int _chunkDurationMs = 1000;
-        private Timer recordingTimer;
-        private MemoryStream CustomStream;
+        private Timer _recordingTimer;
+        private MemoryStream _customStream;
+        private int _bufferSize;
+        private int _sampleRate = 16000;
+        private int _channels = 1;
+        private int _bits = 16;
 
         private string _searchType = "strict";
         private string signalFolderPath = AppContext.BaseDirectory + "Assets" + Path.DirectorySeparatorChar + "Signals" + Path.DirectorySeparatorChar;
         public BackgroundAudioRecorder(int sampleRate) {
-            Microphone = ALC.CaptureOpenDevice(null, sampleRate, ALFormat.Mono16, bufferSize / (channels * bits / 8));
-            //Microphone.DataAvailable += DataAvailableEvent;
+            _sampleRate = sampleRate;
+            _microphone = ALC.CaptureOpenDevice(null, sampleRate, ALFormat.Mono16, _bufferSize);
+        }
+        public void StartRecord(int recordMS) {
+            _bufferSize = _sampleRate * _channels * _bits / 8 * 3;
+            ALC.CaptureStart(_microphone);
+        }
+        public void RecordToWav()
+        {
+            Stopwatch stopwatch = Stopwatch.StartNew();
+            byte [] buffer = new byte[_bufferSize];
+            int totalSamples = 0;
+            while (stopwatch.Elapsed.Seconds < 3) {
+                //ALDevice device = (ALDevice)_microphone;
+                //int samples = ALC.GetInteger(_microphone, AlcGetInteger.CaptureSamples);
 
+            }
+            ALC.CaptureStop(_microphone);
+            ALC.CaptureCloseDevice(_microphone);
         }
-        public void StartRecord(int ms) {
-            //CustomStream = new MemoryStream();
-            //CustomWaveProvider = new WaveFileWriter(CustomStream, Microphone.WaveFormat) { };
-            //Microphone.StartRecording();
-            //recordingTimer = new Timer(ms);
-            //recordingTimer.Elapsed += (s, e) => Microphone.StopRecording();
+        public void StopRecord()
+        {
+            ALC.CaptureStop(_microphone);
         }
+
         public string Recognizing(bool wordsFlag, int maxAlternatives)
         {
             var audioData = GetByteArray();
@@ -111,7 +130,7 @@ namespace voicio.SpeechService
         }
         public byte[] GetByteArray()
         {
-            return CustomStream.ToArray();
+            return _customStream.ToArray();
         }
         public float GetRecorderSampleRate()
         {
