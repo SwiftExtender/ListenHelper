@@ -38,17 +38,18 @@ namespace voicio.ViewModels
         public ReactiveCommand<Unit, Unit> QuitAppCommand { get; }
         public ReactiveCommand<Unit, Unit> ShowTagsWindowCommand { get; }
         public ReactiveCommand<Unit, Unit> ShowImportWindowCommand { get; }
-        public string GetRecognizeTextResult(byte[] audioData, bool wordsFlag, int maxAlternatives, float sampleRate)
+        public string GetRecognizeTextResult(byte[] audioData, bool wordsFlag, int maxAlternatives)
         {
             string model_path = AppContext.BaseDirectory + "voice_model";
-            var recognition = new SpeechRecognition(model_path, sampleRate, wordsFlag, maxAlternatives);
+            var recognition = new SpeechRecognition(model_path, 16000, wordsFlag, maxAlternatives);
             JObject rss = JObject.Parse(recognition.Recognize(audioData));
             return rss.Properties().Last().Value.ToString().ToLower();
         }
         public void StartListenService(CancellationToken token)
         {
-            BackgroundAudioRecorder rec = new BackgroundAudioRecorder() {};
-            float sampleRate = rec.GetRecorderSampleRate();
+            BackgroundAudioRecorder rec = new() {};
+            SignalAudioPlayer player = new();
+            
             //SpeechRecognition recognition = new SpeechRecognition(model_path, GetRecorderSampleRate(), wordsFlag, maxAlternatives);
             try
             {
@@ -57,23 +58,23 @@ namespace voicio.ViewModels
                 {
                     token.ThrowIfCancellationRequested();
                     //keyword processing
-                    switch (GetRecognizeTextResult(audio, false, 0, sampleRate))
+                    switch (GetRecognizeTextResult(audio, false, 0))
                     {
                         case VoiceSearchWord:
                             rec.StartRecord(2);
-                            string secondWordForSearch = GetRecognizeTextResult(audio, false, 0, sampleRate);
+                            string secondWordForSearch = GetRecognizeTextResult(audio, false, 0);
                             var redirectSearchWindow = new VoiceActionWindow() { DataContext = new VoiceActionWindowViewModel(false, secondWordForSearch) };
                             redirectSearchWindow.Show();
                             break;
                         case VoiceExecuteWord:
                             rec.StartRecord(2);
-                            string secondWordForExecute = GetRecognizeTextResult(audio, false, 0, sampleRate);
+                            string secondWordForExecute = GetRecognizeTextResult(audio, false, 0);
                             var redirectExecuteWindow = new VoiceActionWindow() { DataContext = new VoiceActionWindowViewModel(true, secondWordForExecute) };
                             redirectExecuteWindow.Show();
                             break;
                         case SetSearchTypeWord:
                             rec.StartRecord(2);
-                            string secondWordForType = GetRecognizeTextResult(audio, false, 0, sampleRate);
+                            string secondWordForType = GetRecognizeTextResult(audio, false, 0);
                             if (secondWordForType == FuzzySearchWord || secondWordForType == StrictSearchWord)
                             {
                                 _searchType = secondWordForType;
@@ -82,18 +83,18 @@ namespace voicio.ViewModels
                             }
                             else
                             {
-                                rec.SecondWordError();
+                                player.Play();
                             }
                             break;
                         default:
-                            rec.InitWordError();
+                            player.Play();
                             break;
                     }
                 }
             }
             finally
             {
-                //Dispose();
+                player.Play();
             }
 
         }
