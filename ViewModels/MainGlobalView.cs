@@ -38,10 +38,8 @@ namespace voicio.ViewModels
         public ReactiveCommand<Unit, Unit> QuitAppCommand { get; }
         public ReactiveCommand<Unit, Unit> ShowTagsWindowCommand { get; }
         public ReactiveCommand<Unit, Unit> ShowImportWindowCommand { get; }
-        public string GetRecognizeTextResult(byte[] audioData, bool wordsFlag, int maxAlternatives)
+        public string GetRecognizeTextResult(SpeechRecognition recognition, byte[] audioData)
         {
-            string model_path = AppContext.BaseDirectory + "voice_model";
-            var recognition = new SpeechRecognition(model_path, 16000, wordsFlag, maxAlternatives);
             JObject rss = JObject.Parse(recognition.Recognize(audioData));
             return rss.Properties().Last().Value.ToString().ToLower();
         }
@@ -49,32 +47,39 @@ namespace voicio.ViewModels
         {
             BackgroundAudioRecorder rec = new() {};
             SignalAudioPlayer player = new();
-            
+            string model_path = AppContext.BaseDirectory + "voice_model";
+            string signal_path = Path.Join(AppContext.BaseDirectory, "assets", "signals");
+            string firstWordErrorSignal = Path.Join(signal_path, "initworderror.wav");
+            string secondWordErrorSignal = Path.Join(signal_path, "initworderror.wav");
+            string fatalErrorSignal = Path.Join(signal_path, "warning.wav");
+            SpeechRecognition recognition = new SpeechRecognition(model_path, 16000, false, 0);
             //SpeechRecognition recognition = new SpeechRecognition(model_path, GetRecorderSampleRate(), wordsFlag, maxAlternatives);
             try
             {
-                byte[] audio = rec.StartRecord(3);
+                
                 while (!token.IsCancellationRequested)
                 {
                     token.ThrowIfCancellationRequested();
                     //keyword processing
-                    switch (GetRecognizeTextResult(audio, false, 0))
+                    byte[] audio = rec.StartRecord(3);
+                    string word = GetRecognizeTextResult(recognition, audio);
+                    switch (word)
                     {
                         case VoiceSearchWord:
-                            rec.StartRecord(2);
-                            string secondWordForSearch = GetRecognizeTextResult(audio, false, 0);
+                            audio = rec.StartRecord(2);
+                            string secondWordForSearch = GetRecognizeTextResult(recognition, audio);
                             var redirectSearchWindow = new VoiceActionWindow() { DataContext = new VoiceActionWindowViewModel(false, secondWordForSearch) };
                             redirectSearchWindow.Show();
                             break;
                         case VoiceExecuteWord:
-                            rec.StartRecord(2);
-                            string secondWordForExecute = GetRecognizeTextResult(audio, false, 0);
+                            audio = rec.StartRecord(2);
+                            string secondWordForExecute = GetRecognizeTextResult(recognition, audio);
                             var redirectExecuteWindow = new VoiceActionWindow() { DataContext = new VoiceActionWindowViewModel(true, secondWordForExecute) };
                             redirectExecuteWindow.Show();
                             break;
                         case SetSearchTypeWord:
-                            rec.StartRecord(2);
-                            string secondWordForType = GetRecognizeTextResult(audio, false, 0);
+                            audio = rec.StartRecord(2);
+                            string secondWordForType = GetRecognizeTextResult(recognition, audio);
                             if (secondWordForType == FuzzySearchWord || secondWordForType == StrictSearchWord)
                             {
                                 _searchType = secondWordForType;
@@ -83,18 +88,18 @@ namespace voicio.ViewModels
                             }
                             else
                             {
-                                player.Play();
+                                player.Play(secondWordErrorSignal);
                             }
                             break;
                         default:
-                            player.Play();
+                            player.Play(firstWordErrorSignal);
                             break;
                     }
                 }
             }
             finally
             {
-                player.Play();
+                player.Play(fatalErrorSignal);
             }
 
         }

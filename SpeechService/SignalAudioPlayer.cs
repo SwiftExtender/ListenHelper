@@ -40,13 +40,16 @@ namespace voicio.SpeechService
             }
             OwnaudioNet.Start();
             var Engine = OwnaudioNet.Engine!.UnderlyingEngine;
-
             _mixer = new AudioMixer(Engine, bufferSizeInFrames: 512);
+            _mixer.Start();
         }
-        public void Play() {
-            FileSource f = new FileSource("D:\\auxil\\TaskListener\\TaskListener\\Assets\\Signals\\initworderror.mp3");
-            _mixer.AddSource(f);
-            f.Play();
+        public void Play(string path) {
+            FileSource f = new FileSource(path);
+                f.Loop = false;
+                _mixer.AddSource(f);
+                f.Volume = 0.2f;
+                f.Play();
+            
         }
 
     }
