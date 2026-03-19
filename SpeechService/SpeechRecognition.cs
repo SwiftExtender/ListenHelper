@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using Newtonsoft.Json.Linq;
+using System.IO;
+using System.Linq;
 using Vosk;
 
 namespace voicio.SpeechService
@@ -17,6 +19,11 @@ namespace voicio.SpeechService
                 }
             }
             return rec.FinalResult();
+        }
+        public string GetRecognizeTextResult(byte[] audioData)
+        {
+            JObject rss = JObject.Parse(Recognize(audioData));
+            return rss.Properties().Last().Value.ToString().ToLower();
         }
         public SpeechRecognition(string modelpath, float samplerate, bool wordsFlag, int maxAlternatives)
         {

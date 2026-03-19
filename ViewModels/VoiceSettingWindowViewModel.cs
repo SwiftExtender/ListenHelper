@@ -159,7 +159,7 @@ namespace voicio.ViewModels
             }
             TreeDataGridInit();
         }
-        public VoiceSettingWindowViewModel(CancellationTokenSource cts)
+        public VoiceSettingWindowViewModel(CancellationTokenSource? cts)
         {
             VoiceSettingRows = new ObservableCollection<VoiceSetting>();
             TreeDataGridInit();

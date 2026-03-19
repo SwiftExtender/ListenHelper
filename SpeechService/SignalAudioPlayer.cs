@@ -49,8 +49,6 @@ namespace voicio.SpeechService
                 _mixer.AddSource(f);
                 f.Volume = 0.2f;
                 f.Play();
-            
         }
-
     }
 }
