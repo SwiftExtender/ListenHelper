@@ -1,7 +1,11 @@
-﻿using ReactiveUI;
+﻿using AvaloniaEdit.Editing;
+using ReactiveUI;
 using System;
 using System.Reactive.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using voicio.Services;
+using voicio.SpeechService;
 
 namespace voicio.ViewModels
 {
@@ -14,39 +18,56 @@ namespace voicio.ViewModels
             get => _Query;
             set => this.RaiseAndSetIfChanged(ref _Query, value);
         }
-        private string _Exception = "";
+        private string _Exception;
         public string Exception
         {
             get => _Exception;
             set => this.RaiseAndSetIfChanged(ref _Exception, value);
         }
-        public async Task<bool> SearchAction(byte[] temp_speech_buf)
+        private string _InputWord = "";
+        public string InputWord
         {
-            string model_path = AppContext.BaseDirectory + "voice_model";
-            //var recognition = new SpeechRecognition(model_path, recorder.GetRecorderSampleRate());
-            //JObject rss = JObject.Parse(recognition.Recognize(temp_speech_buf));
-            //Query = rss.Properties().Last().Value.ToString();
-
-            return await RedirectToSearchResult.Handle(true);
+            get => _InputWord;
+            set => this.RaiseAndSetIfChanged(ref _InputWord, value);
+        }
+        public void SearchAction()
+        {
+            
         }
         public void ProcessAction()
         {
-            if (_Exception != "")
+            try
             {
+                Assembly asm = Assembly.Load(dllArray);
+                Type type = asm.GetType("FastActionPlugin.Plugin");
+                MethodInfo entrypoint = type.GetMethod("Handler");
+                if (entrypoint != null)
+                {
+                    Delegate.CreateDelegate(typeof(Action<TextArea>), entrypoint);
 
+                }
+                else
+                {
+                    
+                }
+            }
+            catch (Exception ex)
+            {
+                Exception = ex.Message;
             }
         }
-        public VoiceActionWindowViewModel(bool isExecute, string query)
+        public VoiceActionWindowViewModel(bool isExecute, AudioRecorderService recorder, SpeechRecognitionService recognition, SearchService searchService)
         {
+            byte[] audio = recorder.StartRecord(2);
+            Query = recognition.GetRecognizeTextResult(audio);
             if (isExecute)
             {
-
+                ProcessAction();
             }
-            else 
+            else
             {
-
+                SearchAction();
             }
-            ProcessAction();
         }
     }
 }

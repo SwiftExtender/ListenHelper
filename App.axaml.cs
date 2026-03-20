@@ -12,7 +12,7 @@ namespace voicio
     {
         public App()
         {
-            MainGlobalView AppModelView = new MainGlobalView();
+            MainGlobalViewModel AppModelView = new MainGlobalViewModel();
             DataContext = AppModelView;
         }
         public override void Initialize()
@@ -26,10 +26,10 @@ namespace voicio
             tempdb.Database.EnsureCreated(); //create DB if no DB is found
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                desktop.MainWindow = new MainWindow
-                {
-                    DataContext = new MainWindowViewModel(),
-                };
+                //desktop.MainWindow = new MainWindow
+                //{
+                //    DataContext = new MainWindowViewModel(),
+                //};
                 desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown;
             } 
             base.OnFrameworkInitializationCompleted();

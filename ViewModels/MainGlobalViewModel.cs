@@ -3,22 +3,26 @@ using Avalonia.Controls.ApplicationLifetimes;
 using ReactiveUI;
 using System;
 using System.IO;
+using System.Linq;
 using System.Reactive;
 using System.Threading;
 using System.Threading.Tasks;
+using voicio.Services;
 using voicio.SpeechService;
 using voicio.Views;
 
 namespace voicio.ViewModels
 {
 
-    public class MainGlobalView : ViewModelBase
+    public class MainGlobalViewModel : ViewModelBase
     {
         //private ImportWindow importWindow = null;
         //private TagWindow tagWindow = null;
+        public SearchService SearchService { get; set; }
 
+        public string[] garbageWords = ["the", "sniff"];
         //init word
-        public const string VoiceSearchWord = "search";
+        public const string VoiceSearchWord = "find";
         public const string VoiceExecuteWord = "execute";
         public const string SetSearchTypeWord = "type";
         //search types
@@ -37,15 +41,14 @@ namespace voicio.ViewModels
         public ReactiveCommand<Unit, Unit> ShowImportWindowCommand { get; }
         public void StartListenService(CancellationToken token, int deviceIndex = -1)
         {
-            BackgroundAudioRecorder recorder = new() { };
-            SignalAudioPlayer player = new();
+            AudioRecorderService recorder = new(0) { };
+            AudioPlayerService player = new();
             string model_path = AppContext.BaseDirectory + "voice_model";
             signalFolderPath = Path.Join(AppContext.BaseDirectory, "assets", "signals");
             string firstWordErrorSignal = Path.Join(signalFolderPath, "initworderror.wav");
             string secondWordErrorSignal = Path.Join(signalFolderPath, "initworderror.wav");
             string fatalErrorSignal = Path.Join(signalFolderPath, "warning.wav");
-            SpeechRecognition recognition = new SpeechRecognition(model_path, 16000, false, 0);
-            //SpeechRecognition recognition = new SpeechRecognition(model_path, GetRecorderSampleRate(), wordsFlag, maxAlternatives);
+            SpeechRecognitionService recognition = new SpeechRecognitionService(model_path, 16000, false, 0);
             try
             {
                 while (!token.IsCancellationRequested)
@@ -57,33 +60,32 @@ namespace voicio.ViewModels
                     switch (word)
                     {
                         case VoiceSearchWord:
-                            audio = recorder.StartRecord(2);
-                            string secondWordForSearch = recognition.GetRecognizeTextResult(audio);
-                            var redirectSearchWindow = new VoiceActionWindow() { DataContext = new VoiceActionWindowViewModel(false, secondWordForSearch) };
+                            
+                            var redirectSearchWindow = new VoiceActionWindow() { DataContext = new VoiceActionWindowViewModel(false, recorder, recognition) };
                             redirectSearchWindow.Show();
                             break;
                         case VoiceExecuteWord:
-                            audio = recorder.StartRecord(2);
-                            string secondWordForExecute = recognition.GetRecognizeTextResult(audio);
-                            var redirectExecuteWindow = new VoiceActionWindow() { DataContext = new VoiceActionWindowViewModel(true, secondWordForExecute) };
+                            var redirectExecuteWindow = new VoiceActionWindow() { DataContext = new VoiceActionWindowViewModel(false, recorder, recognition) };
                             redirectExecuteWindow.Show();
                             break;
                         case SetSearchTypeWord:
-                            audio = recorder.StartRecord(2);
-                            string secondWordForType = recognition.GetRecognizeTextResult(audio);
-                            if (secondWordForType == FuzzySearchWord || secondWordForType == StrictSearchWord)
-                            {
-                                _searchType = secondWordForType;
-                                var redirectSetSearchTypeWindow = new SetSearchTypeWindow() { DataContext = new SetSearchTypeWindowViewModel(secondWordForType) };
-                                redirectSetSearchTypeWindow.Show();
-                            }
-                            else
-                            {
+                            //audio = recorder.StartRecord(2);
+                            //string secondWordForType = recognition.GetRecognizeTextResult(audio);
+                            //if (secondWordForType == FuzzySearchWord || secondWordForType == StrictSearchWord)
+                            //{
+                            //    _searchType = secondWordForType;
+                            //    var redirectSetSearchTypeWindow = new SetSearchTypeWindow() { DataContext = new SetSearchTypeWindowViewModel(secondWordForType) };
+                            //    redirectSetSearchTypeWindow.Show();
+                            //}
+                            //else
+                            //{
                                 player.Play(secondWordErrorSignal);
-                            }
+                            //}
                             break;
                         default:
-                            player.Play(firstWordErrorSignal);
+                            if (!garbageWords.Contains(word)) {
+                                player.Play(firstWordErrorSignal);
+                            }
                             break;
                     }
                 }
@@ -94,11 +96,12 @@ namespace voicio.ViewModels
             }
 
         }
-        public MainGlobalView()
+        public MainGlobalViewModel()
         {
+            SearchService = new();
             OpenMainWindow = ReactiveCommand.Create(() =>
             {
-                var w1 = new MainWindow() { DataContext = new MainWindowViewModel() };
+                var w1 = new MainWindow() { DataContext = new MainWindowViewModel(SearchService) };
                 w1.Show();
             });
             ShowVoiceSettingsCommand = ReactiveCommand.Create(() =>

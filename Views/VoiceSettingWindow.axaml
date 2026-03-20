@@ -13,30 +13,6 @@
 		WindowStartupLocation="CenterScreen"
 		ExtendClientAreaToDecorationsHint="True"
 		ExtendClientAreaTitleBarHeightHint="-1">
-	<Window.Styles>
-		<Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-			<Setter Property="Background" Value="{Binding $parent[Button].Background}"></Setter>
-			<Setter Property="BorderBrush" Value="Wheat"></Setter>
-		</Style>
-		<Style Selector="ToggleButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-			<Setter Property="Background" Value="{Binding $parent[Button].Background}"></Setter>
-			<Setter Property="BorderBrush" Value="Wheat"></Setter>
-		</Style>
-		<Style Selector="ToggleButton">
-			<Setter Property="HorizontalContentAlignment" Value="Center"/>
-			<Setter Property="VerticalContentAlignment" Value="Center"/>
-		</Style>
-		<Style Selector="ToggleButton.Pin">
-			<Style Selector="^:unchecked ContentPresenter#PART_ContentPresenter">
-				<Setter Property="Content" Value="No pin"/>
-				<Setter Property="Background" Value="Gray"/>
-			</Style>
-			<Style Selector="^:checked ContentPresenter#PART_ContentPresenter">
-				<Setter Property="Content" Value="Pin"/>
-				<Setter Property="Background" Value="RoyalBlue"/>
-			</Style>
-		</Style>
-	</Window.Styles>
 	<Border BorderThickness="1.5" BorderBrush="#D2B1A38E" IsVisible="True">
 		<StackPanel>
 			<Label Margin="10,5,10,0" BorderBrush="White">Voice Operations</Label>

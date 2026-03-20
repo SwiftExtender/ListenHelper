@@ -6,11 +6,11 @@ using System.Linq;
 
 namespace voicio.SpeechService
 {
-    public class SignalAudioPlayer
+    public class AudioPlayerService
     {
         public AudioMixer _mixer;
         public AudioConfig _config;
-        public SignalAudioPlayer()
+        public AudioPlayerService()
         {
             AudioConfig _config = new AudioConfig()
             {

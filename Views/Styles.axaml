@@ -1,0 +1,163 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<Styles.Resources>
+		<Thickness x:Key="MenuFlyoutScrollerMargin">0</Thickness>
+	</Styles.Resources>
+	<Style Selector="ScrollViewer.TabScroll /template/ ScrollBar:horizontal">
+		<Setter Property="Background" Value="Blue"/>
+		<Setter Property="MaxHeight" Value="8"/>
+		<Setter Property="MinHeight" Value="8"/>
+	</Style>
+	<Style Selector="TabItem">
+		<Setter Property="FontSize" Value="16" />
+	</Style>
+	<Style Selector="ListBox">
+		<Setter Property="FontSize" Value="13" />
+		<Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Visible" />
+		<Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Visible" />
+		<Setter Property="ScrollViewer.AllowAutoHide" Value="False"/>
+		<Setter Property="SelectionMode" Value="Multiple" />
+		<Setter Property="BorderThickness" Value="1" />
+		<Setter Property="HorizontalAlignment" Value="Stretch" />
+	</Style>
+	<Style Selector="ScrollViewer">
+		<Setter Property="AllowAutoHide" Value="False"/>
+	</Style>
+	<Style Selector="ListBoxItem">
+		<Setter Property="BorderThickness" Value="1"/>
+		<Setter Property="BorderBrush" Value="Gray"/>
+	</Style>
+	<Style Selector="Button">
+		<Setter Property="FontSize" Value="13" />
+		<Setter Property="HorizontalContentAlignment" Value="Center" />
+		<Setter Property="VerticalAlignment" Value="Center" />
+		<Setter Property="Foreground" Value="#FFFFFBD6" />
+		<Setter Property="CornerRadius" Value="0,0,0,0" />
+	</Style>
+	<Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+		<Setter Property="Background" Value="{Binding $parent[Button].Background}"></Setter>
+		<Setter Property="Foreground" Value="{Binding $parent[Button].Foreground}"></Setter>
+		<Setter Property="BorderBrush" Value="Wheat"></Setter>
+	</Style>
+	<Style Selector="Button.Ribbon">
+		<Setter Property="Margin" Value="0,0,10,0" />
+	</Style>
+	<Style Selector="Button.Ribbon:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+		<Setter Property="Background" Value="{Binding $parent[Button].Background}"></Setter>
+		<Setter Property="Foreground" Value="{Binding $parent[Button].Foreground}"></Setter>
+		<Setter Property="BorderBrush" Value="Wheat"></Setter>
+	</Style>
+	<Style Selector="ToggleButton">
+		<Setter Property="Foreground" Value="#FFFFFBD6" />
+		<Setter Property="CornerRadius" Value="4,4,4,4" />
+		<Setter Property="HorizontalContentAlignment" Value="Center"/>
+		<Setter Property="VerticalContentAlignment" Value="Center"/>
+	</Style>
+	<Style Selector="ToggleButton.Pin">
+		<Style Selector="^:unchecked ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Content" Value="No pin"/>
+			<Setter Property="Background" Value="DarkGoldenrod"/>
+		</Style>
+		<Style Selector="^:checked ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Content" Value="Pin"/>
+			<Setter Property="Background" Value="Green"/>
+		</Style>
+	</Style>
+	<Style Selector="ToggleButton.SearchType">
+		<Style Selector="^:unchecked ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="DarkGoldenrod"/>
+			<Setter Property="Content" Value="Strict"/>
+		</Style>
+		<Style Selector="^:checked ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="Green"/>
+			<Setter Property="Content" Value="Fuzzy"/>
+		</Style>
+	</Style>
+	<Style Selector="ToggleButton.EditingMode">
+		<Style Selector="^:unchecked ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="#5b5b5b"/>
+			<Setter Property="Content" Value="Editing off"/>
+		</Style>
+		<Style Selector="^:checked ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="#FFFF6B14"/>
+			<Setter Property="Content" Value="Editing on"/>
+		</Style>
+	</Style>
+	<Style Selector="ComboBox">
+		<Setter Property="FontSize" Value="12" />
+	</Style>
+	<Style Selector="SelectableTextBlock">
+		<Setter Property="FontSize" Value="14" />
+	</Style>
+	<Style Selector="ToggleButton.Pin">
+		<Style Selector="^:unchecked ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Content" Value="Not pinned"/>
+			<Setter Property="Background" Value="DarkGoldenrod"/>
+			<Setter Property="Width" Value="95" />
+		</Style>
+		<Style Selector="^:checked ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Content" Value="Pinned"/>
+			<Setter Property="Background" Value="Green"/>
+			<Setter Property="Width" Value="95" />
+		</Style>
+	</Style>
+	<Style Selector="ToggleButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+		<!--<Setter Property="Background" Value="{Binding $parent[ToggleButton].Background}"></Setter>-->
+		<Setter Property="Foreground" Value="{Binding $parent[ToggleButton].Foreground}"></Setter>
+		<Setter Property="BorderBrush" Value="Wheat"></Setter>
+	</Style>
+	<Style Selector="Button.UniqueKeys">
+		<Setter Property="Background" Value="#C37B24D4" />
+		<Setter Property="Content" Value="Unique Keys" />
+	</Style>
+	<Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+		<Setter Property="Background" Value="{Binding $parent[Button].Background}"></Setter>
+		<Setter Property="Foreground" Value="{Binding $parent[Button].Foreground}"></Setter>
+		<Setter Property="BorderBrush" Value="Wheat"></Setter>
+	</Style>
+	<Style Selector="Button.RawKeys">
+		<Setter Property="Background" Value="OrangeRed" />
+		<Setter Property="Content" Value="Duplicate Keys" />
+	</Style>
+	<Style Selector="Button.UniqueValues">
+		<Setter Property="Background" Value="#C37B24D4" />
+		<Setter Property="Content" Value="Unique Values" />
+	</Style>
+	<Style Selector="Button.RawValues">
+		<Setter Property="Background" Value="OrangeRed" />
+		<Setter Property="Content" Value="Duplicate Values" />
+	</Style>
+	<Style Selector="TabItem:selected">
+		<Setter Property="Foreground" Value="#F3F5AE2A" />
+	</Style>
+	<Style Selector="TabItem:pointerover /template/ Border#PART_LayoutRoot">
+		<Setter Property="TextElement.Foreground" Value="#F3D2F52A" />
+	</Style>
+	<Style Selector="TabItem:selected:pointerover /template/ Border#PART_LayoutRoot">
+		<Setter Property="TextElement.Foreground" Value="#F3F5AE2A" />
+	</Style>
+	<Style Selector="TreeDataGridRow">
+		<Setter Property="Height" Value="30"/>
+		<Setter Property="BorderThickness" Value="1"/>
+		<Setter Property="BorderBrush" Value="Gray"/>
+		<Setter Property="HorizontalAlignment" Value="Stretch"/>
+	</Style>
+	<Style Selector="Button">
+		<Setter Property="HorizontalContentAlignment" Value="Center"/>
+		<Setter Property="VerticalContentAlignment" Value="Center"/>
+	</Style>
+	<Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+		<Setter Property="Background" Value="{Binding $parent[Button].Background}"></Setter>
+		<Setter Property="BorderBrush" Value="Wheat"></Setter>
+	</Style>
+	<Style Selector="ToggleButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+		<Setter Property="Background" Value="{Binding $parent[Button].Background}"></Setter>
+		<Setter Property="BorderBrush" Value="Wheat"></Setter>
+	</Style>
+	<Style Selector="CheckBox:checked /template/ Path#CheckGlyph">
+		<Setter Property="Fill" Value="Yellow"/>
+	</Style>
+	<Style Selector="CheckBox:checked /template/ Border#NormalRectangle">
+		<Setter Property="Background" Value="DarkGreen"/>
+	</Style>
+</Styles>

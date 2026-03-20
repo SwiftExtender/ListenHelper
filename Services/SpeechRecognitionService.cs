@@ -5,7 +5,7 @@ using Vosk;
 
 namespace voicio.SpeechService
 {
-    public class SpeechRecognition
+    public class SpeechRecognitionService
     {
         private readonly VoskRecognizer rec;
         public string Recognize(byte[] buffer)
@@ -25,7 +25,7 @@ namespace voicio.SpeechService
             JObject rss = JObject.Parse(Recognize(audioData));
             return rss.Properties().Last().Value.ToString().ToLower();
         }
-        public SpeechRecognition(string modelpath, float samplerate, bool wordsFlag, int maxAlternatives)
+        public SpeechRecognitionService(string modelpath, float samplerate, bool wordsFlag, int maxAlternatives)
         {
             Model model = new Model(modelpath);
             rec = new VoskRecognizer(model, samplerate);

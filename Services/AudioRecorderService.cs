@@ -8,7 +8,7 @@ using Timer = System.Threading.Timer;
 
 namespace voicio.SpeechService
 {
-    public class BackgroundAudioRecorder
+    public class AudioRecorderService
     {
         //private CancellationTokenSource _cancellationTokenSource;
         private PvRecorder _microphone;
@@ -19,7 +19,7 @@ namespace voicio.SpeechService
         //private int _channels = 1;
         //private int _bits = 16;
 
-        public BackgroundAudioRecorder(int deviceIndex = -1)
+        public AudioRecorderService(int deviceIndex = -1)
         {
             _microphone = PvRecorder.Create(512, deviceIndex);
         }

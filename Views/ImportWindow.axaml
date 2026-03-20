@@ -11,16 +11,6 @@
 		WindowStartupLocation="CenterScreen"
 		ExtendClientAreaToDecorationsHint="True"
 		ExtendClientAreaTitleBarHeightHint="-1">
-	<Window.Styles>
-		<Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-			<Setter Property="Background" Value="{Binding $parent[Button].Background}"></Setter>
-			<Setter Property="BorderBrush" Value="Wheat"></Setter>
-		</Style>
-		<Style Selector="ToggleButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-			<Setter Property="Background" Value="{Binding $parent[Button].Background}"></Setter>
-			<Setter Property="BorderBrush" Value="Wheat"></Setter>
-		</Style>
-	</Window.Styles>
 	<Border BorderThickness="1.5" BorderBrush="#D2B1A38E" IsVisible="True">
 	<StackPanel>
 		<Label Margin="10,5,10,0" BorderBrush="White">Import hints</Label>

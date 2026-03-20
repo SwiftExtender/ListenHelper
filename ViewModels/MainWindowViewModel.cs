@@ -1,15 +1,11 @@
-﻿using Avalonia;
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Controls.Models.TreeDataGrid;
 using Avalonia.Controls.Selection;
 using Avalonia.Controls.Templates;
 using Avalonia.Interactivity;
 using Avalonia.Media;
-using Avalonia.Threading;
-using DynamicData;
-using Newtonsoft.Json.Linq;
+//using DynamicData;
 using ReactiveUI;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -17,21 +13,20 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using voicio.Models;
-using voicio.SpeechService;
+using voicio.Services;
 
 namespace voicio.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        //private InteractiveAudioRecorder recorder;
-        //private System.Timers.Timer RecordTimer;
-        private TaskCompletionSource<bool> voiceSearchTask;
-        private ObservableCollection<string>? _LastSearches;
-        public ObservableCollection<string>? LastSearches
+        //private TaskCompletionSource<bool> voiceSearchTask;
+        private ObservableCollection<string> _LastSearches;
+        public ObservableCollection<string> LastSearches
         {
             get => _LastSearches;
             set => this.RaiseAndSetIfChanged(ref _LastSearches, value);
         }
+        private SearchService _searchService;
         //private List<Tag>? _TagsForChoice;
         //public List<Tag>? TagsForChoice
         //{
@@ -121,34 +116,7 @@ namespace voicio.ViewModels
             }
         }
         public ReactiveCommand<Unit, Unit> StartSearchCommand { get; }
-        //public ReactiveCommand<Unit, Unit> StartVoiceSearchCommand { get; }   
-        //public void StartVoiceSearch()
-        //{
-        //    if (!IsVoiceSearching)
-        //    {
-        //        IsVoiceSearching = true;
-        //        recorder = new InteractiveAudioRecorder();
-        //        Dispatcher.UIThread.Invoke(() =>
-        //        {
-        //            recorder.StartRecord();
-        //        });
-        //    } else
-        //    {
-        //        Dispatcher.UIThread.Invoke(() =>
-        //        {
-        //            recorder.StopRecord();
-        //            var temp_speech_buf = recorder.GetByteArray();
-        //            string model_path = AppContext.BaseDirectory + "voice_model";
-        //            var recognition = new SpeechRecognition(model_path, recorder.GetRecorderSampleRate());
-        //            JObject rss = JObject.Parse(recognition.Recognize(temp_speech_buf));
-        //            Query = rss.Properties().Last().Value.ToString();
-        //        });
-                
-        //        StartSearch();
-        //        IsVoiceSearching = false;
-                
-        //    }
-        //}
+
         private void RemoveHint(object sender, RoutedEventArgs e)
         {
             Button removeButton = (Button)sender;
@@ -177,7 +145,8 @@ namespace voicio.ViewModels
                     DataSource.HintTable.Update(updateHint);
                     DataSource.SaveChanges();
                 }
-            } else
+            }
+            else
             {
                 using (var DataSource = new HelpContext())
                 {
@@ -243,7 +212,7 @@ namespace voicio.ViewModels
                     BeginEditGestures = BeginEditGestures.Tap,
                     MinWidth = new GridLength(80, GridUnitType.Pixel),
                     IsTextSearchEnabled = true,
-                    
+
                 };
                 TextColumn<Hint, string> HintTextColumn = new TextColumn<Hint, string>("Text", x => x.HintText, (r, v) => r.HintText = v, options: EditOptions, width: TextColumnLength);
                 TextColumn<Hint, string> HintCommentColumn = new TextColumn<Hint, string>("Comment", x => x.Comment, (r, v) => r.Comment = v, options: EditOptions, width: TextColumnLength);
@@ -277,52 +246,39 @@ namespace voicio.ViewModels
                     },
                 };
                 IsAddButtonVisible = false;
-                
+
             }
             HintsGridData.Selection = new TreeDataGridCellSelectionModel<Hint>(HintsGridData);
         }
 
         public void StartSearch()
         {
-            using (var DataSource = new HelpContext())
+            var hints = _searchService.Search(Query, IsFuzzy, IsTextSearch, IsCommentSearch);
+            LastSearches = _searchService.LastSearches;
+            HintsRows = new ObservableCollection<Hint>(hints.Distinct());
+            if (HintsRows.Count > 0)
             {
-                if (Query.Trim() != "") LastSearches.Insert(0, Query);
-                List<Hint> hints = new List<Hint>();
-                //TagsForChoice = DataSource.TagTable.ToList();
-                if (IsFuzzy)
-                {
-                    if (IsTextSearch) hints.Add(DataSource.HintTable.Where(b => b.HintText.Contains(Query)).ToList());
-                    if (IsCommentSearch) hints.Add(DataSource.HintTable.Where(b => b.Comment.Contains(Query)).ToList());
-                    //if (IsTagSearch) hints.Add(DataSource.HintTable.Where(b => b.HintTag.Any(pz => pz.Tag.TagText.Contains(Query))).ToList());
-                }
-                else
-                {
-                    if (IsTextSearch) hints.Add(DataSource.HintTable.Where(b => b.HintText == Query).ToList());
-                    if (IsCommentSearch) hints.Add(DataSource.HintTable.Where(b => b.Comment == Query).ToList());
-                    //if (IsTagSearch) hints.Add(DataSource.HintTable.Where(b => b.HintTag.Any(pz => pz.Tag.TagText == Query)).ToList());
-                }
-                HintsRows = new ObservableCollection<Hint>(hints.Distinct());
-                if (HintsRows.Count > 0)
-                {
-                    StatusText = "Search result: " + HintsRows.Count.ToString();
-                } else
-                {
-                    StatusText = "No results found";
-                }
-                
+                StatusText = "Search result: " + HintsRows.Count.ToString();
             }
+            else
+            {
+                StatusText = "No results found";
+            }
+
+
             TreeDataGridInit();
         }
-        public MainWindowViewModel()
+        public MainWindowViewModel(SearchService searchService)
         {
             StartSearchCommand = ReactiveCommand.Create(StartSearch);
             //StartVoiceSearchCommand = ReactiveCommand.CreateFromTask(StartVoiceSearch);
             //StartVoiceSearchCommand = ReactiveCommand.Create(StartVoiceSearch);
-            LastSearches = new ObservableCollection<string>();
+            _searchService = searchService;
+            LastSearches = searchService.LastSearches;
             List<Hint> hints = new List<Hint>();
             using (var DataSource = new HelpContext())
             {
-                hints.Add(DataSource.HintTable.ToList());
+                hints.AddRange(DataSource.HintTable.ToList());
                 HintsRows = new ObservableCollection<Hint>(hints.Distinct());
             }
             TreeDataGridInit();
