@@ -1,0 +1,72 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:voicio.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:bh="using:voicio.ViewModels"
+		xmlns:convert="clr-namespace:Avalonia.Data.Converters;assembly=Avalonia.Base"
+		x:Class="voicio.Views.ScriptWindow"
+		x:DataType="vm:ScriptWindowViewModel"
+        mc:Ignorable="d"
+		xmlns:ae="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit"
+		WindowStartupLocation="CenterScreen"
+		ExtendClientAreaToDecorationsHint="True"
+		ExtendClientAreaTitleBarHeightHint="-1"
+		WindowState="Maximized"
+		Background="#1A1A1A"
+		Title="Scripts Editor"
+		>
+	<Window.Styles>
+	</Window.Styles>
+	<Border BorderThickness="1.5" BorderBrush="DarkSalmon" IsVisible="True">
+		<StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+		<Grid RowDefinitions="50,*,*" Margin="10,5,10,5">
+			<Button Grid.Row="0" Content="Add Script" Background="#F92684D7" Margin="10,5,10,5" Command="{Binding AddMacrosCommand}"/>
+			<DataGrid Grid.Row="1" x:Name="mgrid" ScrollViewer.AllowAutoHide="False" MinHeight="195" MaxHeight="195" ItemsSource="{Binding MacrosGridData}" SelectedItem="{Binding SelectedRow}" Margin="10,5,10,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="2"  BorderBrush="Gray">
+				<DataGrid.Columns>
+					<DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
+					<DataGridTextColumn Header="HotKey" Binding="{Binding HotKey}"/>
+					<DataGridCheckBoxColumn Header="Active" Binding="{Binding IsActive}">
+					</DataGridCheckBoxColumn>
+					<DataGridTextColumn Header="Checksum" Binding="{Binding Checksum}" IsReadOnly="True"/>
+					<DataGridTemplateColumn Header="Actions">
+						<DataGridTemplateColumn.CellTemplate>
+							<DataTemplate>
+								<DockPanel>
+									<Button Content="Save" Background="#FD429118" Command="{Binding $parent[DataGrid].DataContext.SaveMacrosCommand}" CommandParameter="{Binding .}"/>
+									<Button Content="Delete" Background="#D1D91C82" Command="{Binding $parent[DataGrid].DataContext.RemoveMacrosCommand}" CommandParameter="{Binding .}"/>
+								</DockPanel>
+							</DataTemplate>
+						</DataGridTemplateColumn.CellTemplate>
+					</DataGridTemplateColumn>
+				</DataGrid.Columns>
+			</DataGrid>
+			<DataGrid Grid.Row="2" ScrollViewer.AllowAutoHide="False" MaxHeight="165" ItemsSource="{Binding RefsGridData}" Margin="10,5,10,5" BorderThickness="2"  BorderBrush="Gray">
+				<DataGrid.Columns>
+					<DataGridTextColumn Header="FilePath"  Binding="{Binding FilePath}"/>
+				</DataGrid.Columns>
+			</DataGrid>
+		</Grid>
+		<ae:TextEditor x:Name="Editor" MaxHeight="300" SyntaxHighlighting="C#" MinHeight="300" VerticalAlignment="Stretch" BorderBrush="#008b8b" Document="{Binding SourceCode, Mode=TwoWay}" BorderThickness="2" Margin="10,5,10,5" ShowLineNumbers="True" HorizontalAlignment="Stretch" HorizontalScrollBarVisibility="Visible"
+                               VerticalScrollBarVisibility="Visible" IsVisible="{Binding SelectedRow, Converter={x:Static convert:ObjectConverters.IsNotNull}}">
+			<ae:TextEditor.Options>
+				<ae:TextEditorOptions EnableEmailHyperlinks="False" EnableHyperlinks="False"/>
+			</ae:TextEditor.Options>
+			<ae:TextEditor.ContextFlyout>
+				<MenuFlyout>
+					<MenuItem Header="Copy" InputGesture="ctrl+C" Command="{Binding CopyMouseCommand}" CommandParameter="{Binding #Editor.TextArea}"></MenuItem>
+					<MenuItem Header="Cut" InputGesture="ctrl+X" Command="{Binding CutMouseCommand}" CommandParameter="{Binding #Editor.TextArea}"></MenuItem>
+					<MenuItem Header="Paste" InputGesture="ctrl+V" Command="{Binding PasteMouseCommand}"  CommandParameter="{Binding #Editor.TextArea}"></MenuItem>
+					<MenuItem Header="-"/>
+					<MenuItem Header="Select All" InputGesture="ctrl+A" Command="{Binding SelectAllMouseCommand}" CommandParameter="{Binding #Editor.TextArea}"></MenuItem>
+				</MenuFlyout>
+			</ae:TextEditor.ContextFlyout>
+		</ae:TextEditor>
+			<SelectableTextBlock Margin="15,5,10,5" Text="{Binding CompileStatusText}"></SelectableTextBlock>
+			<DockPanel>
+				<Button Background="#FD429118" Content="Save Code" Margin="10,5,10,5" Command="{Binding SaveCodeCommand}" IsEnabled="{Binding SelectedRow, Converter={x:Static convert:ObjectConverters.IsNotNull}}" HotKey="Ctrl+S"/>
+				<Button Background="LightSeaGreen" Content="Compile" Margin="10,5,10,5" Command="{Binding CompileSourceCodeCommand}" IsEnabled="{Binding SelectedRow, Converter={x:Static convert:ObjectConverters.IsNotNull}}" HotKey="Ctrl+B"/>
+			</DockPanel>
+	</StackPanel>		
+	</Border>
+</Window>

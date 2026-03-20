@@ -61,11 +61,11 @@ namespace voicio.ViewModels
                     {
                         case VoiceSearchWord:
                             
-                            var redirectSearchWindow = new VoiceActionWindow() { DataContext = new VoiceActionWindowViewModel(false, recorder, recognition) };
+                            var redirectSearchWindow = new VoiceDialogWindow() { DataContext = new VoiceDialogWindowViewModel(false, recorder, recognition, SearchService) };
                             redirectSearchWindow.Show();
                             break;
                         case VoiceExecuteWord:
-                            var redirectExecuteWindow = new VoiceActionWindow() { DataContext = new VoiceActionWindowViewModel(false, recorder, recognition) };
+                            var redirectExecuteWindow = new VoiceDialogWindow() { DataContext = new VoiceDialogWindowViewModel(false, recorder, recognition, SearchService) };
                             redirectExecuteWindow.Show();
                             break;
                         case SetSearchTypeWord:
@@ -106,8 +106,8 @@ namespace voicio.ViewModels
             });
             ShowVoiceSettingsCommand = ReactiveCommand.Create(() =>
             {
-                var w2 = new VoiceSettingWindow() { DataContext = new VoiceSettingWindowViewModel(_cts) };
-                w2.Show();
+                //var w2 = new VoiceSettingWindow() { DataContext = new VoiceSettingWindowViewModel(_cts) };
+                //w2.Show();
             });
             ShowImportWindowCommand = ReactiveCommand.Create(() =>
             {

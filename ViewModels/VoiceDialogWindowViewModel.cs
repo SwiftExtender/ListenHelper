@@ -1,17 +1,18 @@
 ﻿using AvaloniaEdit.Editing;
 using ReactiveUI;
 using System;
-using System.Reactive.Linq;
+using System.Collections.Generic;
 using System.Reflection;
-using System.Threading.Tasks;
+using voicio.Models;
 using voicio.Services;
 using voicio.SpeechService;
 
 namespace voicio.ViewModels
 {
-    public class VoiceActionWindowViewModel : ViewModelBase
+    public class VoiceDialogWindowViewModel : ViewModelBase
     {
-        public Interaction<bool, bool> RedirectToSearchResult { get; } = new Interaction<bool, bool>();
+        public SearchService SearchService { get; set; }
+        //public Interaction<bool, bool> RedirectToSearchResult { get; } = new Interaction<bool, bool>();
         private string _Query = "";
         public string Query
         {
@@ -32,23 +33,23 @@ namespace voicio.ViewModels
         }
         public void SearchAction()
         {
-            
+            List<Hint> hints = SearchService.SearchHint(Query, false);
         }
         public void ProcessAction()
         {
             try
             {
-                Assembly asm = Assembly.Load(dllArray);
-                Type type = asm.GetType("FastActionPlugin.Plugin");
-                MethodInfo entrypoint = type.GetMethod("Handler");
-                if (entrypoint != null)
+                List<ScriptCodeModel> hints = SearchService.SearchScript(Query, false);
+                if (hints.Count > 0)
                 {
-                    Delegate.CreateDelegate(typeof(Action<TextArea>), entrypoint);
+                    Assembly asm = Assembly.Load(hints[0].BinaryExecutable);
+                    Type type = asm.GetType("FastActionPlugin.Plugin");
+                    MethodInfo entrypoint = type.GetMethod("Handler");
+                    if (entrypoint != null)
+                    {
+                        Delegate.CreateDelegate(typeof(Action<TextArea>), entrypoint);
 
-                }
-                else
-                {
-                    
+                    }
                 }
             }
             catch (Exception ex)
@@ -56,10 +57,11 @@ namespace voicio.ViewModels
                 Exception = ex.Message;
             }
         }
-        public VoiceActionWindowViewModel(bool isExecute, AudioRecorderService recorder, SpeechRecognitionService recognition, SearchService searchService)
+        public VoiceDialogWindowViewModel(bool isExecute, AudioRecorderService recorder, SpeechRecognitionService recognition, SearchService searchService)
         {
             byte[] audio = recorder.StartRecord(2);
             Query = recognition.GetRecognizeTextResult(audio);
+            SearchService = searchService;
             if (isExecute)
             {
                 ProcessAction();

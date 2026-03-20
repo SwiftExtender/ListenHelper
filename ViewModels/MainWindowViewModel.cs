@@ -11,7 +11,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Threading.Tasks;
 using voicio.Models;
 using voicio.Services;
 
@@ -253,12 +252,12 @@ namespace voicio.ViewModels
 
         public void StartSearch()
         {
-            var hints = _searchService.Search(Query, IsFuzzy, IsTextSearch, IsCommentSearch);
-            LastSearches = _searchService.LastSearches;
+            var hints = _searchService.SearchHint(Query, IsFuzzy, IsTextSearch, IsCommentSearch);
+            LastSearches = _searchService.LastHintSearches;
             HintsRows = new ObservableCollection<Hint>(hints.Distinct());
             if (HintsRows.Count > 0)
             {
-                StatusText = "Search result: " + HintsRows.Count.ToString();
+                StatusText = "SearchHint result: " + HintsRows.Count.ToString();
             }
             else
             {
@@ -274,7 +273,7 @@ namespace voicio.ViewModels
             //StartVoiceSearchCommand = ReactiveCommand.CreateFromTask(StartVoiceSearch);
             //StartVoiceSearchCommand = ReactiveCommand.Create(StartVoiceSearch);
             _searchService = searchService;
-            LastSearches = searchService.LastSearches;
+            LastSearches = searchService.LastHintSearches;
             List<Hint> hints = new List<Hint>();
             using (var DataSource = new HelpContext())
             {

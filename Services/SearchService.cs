@@ -7,13 +7,14 @@ namespace voicio.Services
 {
     public class SearchService
     {
-        public ObservableCollection<string> LastSearches;
-        public List<Hint> Search(string Query, bool isFuzzy, bool IsTextSearch, bool IsCommentSearch)
+        public ObservableCollection<string> LastVoiceSearches;
+        public ObservableCollection<string> LastHintSearches;
+        public List<Hint> SearchHint(string Query, bool isFuzzy, bool IsTextSearch = true, bool IsCommentSearch = false)
         {
             List<Hint> hints = new List<Hint>();
             using (var DataSource = new HelpContext())
             {
-                if (Query.Trim() != "") LastSearches.Insert(0, Query);
+                if (Query.Trim() != "") LastHintSearches.Insert(0, Query);
                 //TagsForChoice = DataSource.TagTable.ToList();
                 if (isFuzzy)
                 {
@@ -30,9 +31,27 @@ namespace voicio.Services
             }
             return hints;
         }
+        public List<ScriptCodeModel> SearchScript(string Query, bool isFuzzy)
+        {
+            List<ScriptCodeModel> scripts = new List<ScriptCodeModel>();
+            using (var DataSource = new HelpContext())
+            {
+                if (Query.Trim() != "") LastVoiceSearches.Insert(0, Query);
+                //TagsForChoice = DataSource.TagTable.ToList();
+                if (isFuzzy)
+                {
+                    scripts.AddRange(DataSource.ScriptTable.Where(b => b.Name.Contains(Query)).ToList());
+                }
+                else
+                {
+                    scripts.AddRange((DataSource.ScriptTable.Where(b => b.Name == Query)).ToList());
+                }
+            }
+            return scripts;
+        }
         public SearchService()
         {
-            LastSearches = new ObservableCollection<string>();
+            LastHintSearches = new ObservableCollection<string>();
         }
     }
 }

@@ -5,9 +5,9 @@ using voicio.ViewModels;
 
 namespace voicio.Views;
 
-public partial class VoiceActionWindow : Window
+public partial class VoiceDialogWindow : Window
 {
-    public VoiceActionWindow()
+    public VoiceDialogWindow()
     {
         InitializeComponent();
         //ViewModel.RedirectToSearchResult.RegisterHandler(async interaction =>

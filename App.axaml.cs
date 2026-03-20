@@ -4,7 +4,6 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using voicio.Models;
 using voicio.ViewModels;
-using voicio.Views;
 
 namespace voicio
 {
@@ -18,7 +17,6 @@ namespace voicio
         public override void Initialize()
         {
             AvaloniaXamlLoader.Load(this);
-
         }
         public override void OnFrameworkInitializationCompleted()
         {
@@ -31,7 +29,7 @@ namespace voicio
                 //    DataContext = new MainWindowViewModel(),
                 //};
                 desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown;
-            } 
+            }
             base.OnFrameworkInitializationCompleted();
         }
     }
