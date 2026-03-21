@@ -5,16 +5,27 @@ using voicio.Models;
 
 namespace voicio.Services
 {
+    public class SearchItem
+    {
+        public string Query { get; set; }
+        public bool isVoice { get; set; }
+        public bool isAction { get; set; }
+        public SearchItem(string query, bool isvoice, bool isaction)
+        {
+            Query = query;
+            isVoice = isvoice;
+            isAction = isaction;
+        }
+    }
     public class SearchService
     {
-        public ObservableCollection<string> LastVoiceSearches;
-        public ObservableCollection<string> LastHintSearches;
-        public List<Hint> SearchHint(string Query, bool isFuzzy, bool IsTextSearch = true, bool IsCommentSearch = false)
+        public ObservableCollection<SearchItem> LastSearches;
+        public List<Hint> SearchHint(string Query, bool isVoiceSearch, bool isFuzzy, bool IsTextSearch = true, bool IsCommentSearch = false)
         {
             List<Hint> hints = new List<Hint>();
             using (var DataSource = new HelpContext())
             {
-                if (Query.Trim() != "") LastHintSearches.Insert(0, Query);
+                if (Query.Trim() != "") LastSearches.Insert(0, new SearchItem(Query, isVoiceSearch, false));
                 //TagsForChoice = DataSource.TagTable.ToList();
                 if (isFuzzy)
                 {
@@ -31,12 +42,12 @@ namespace voicio.Services
             }
             return hints;
         }
-        public List<ScriptCodeModel> SearchScript(string Query, bool isFuzzy)
+        public List<ScriptCodeModel> SearchScript(string Query, bool isVoiceSearch, bool isFuzzy)
         {
             List<ScriptCodeModel> scripts = new List<ScriptCodeModel>();
             using (var DataSource = new HelpContext())
             {
-                if (Query.Trim() != "") LastVoiceSearches.Insert(0, Query);
+                if (Query.Trim() != "") LastSearches.Insert(0, new SearchItem(Query, isVoiceSearch, true));
                 //TagsForChoice = DataSource.TagTable.ToList();
                 if (isFuzzy)
                 {
@@ -51,7 +62,7 @@ namespace voicio.Services
         }
         public SearchService()
         {
-            LastHintSearches = new ObservableCollection<string>();
+            LastSearches = new ObservableCollection<SearchItem>();
         }
     }
 }

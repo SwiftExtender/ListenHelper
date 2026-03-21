@@ -6,7 +6,7 @@ using System.Threading;
 //using Timer = System.Timers.Timer;
 using Timer = System.Threading.Timer;
 
-namespace voicio.SpeechService
+namespace voicio.Services
 {
     public class AudioRecorderService
     {

@@ -4,7 +4,7 @@ using OwnaudioNET.Mixing;
 using OwnaudioNET.Sources;
 using System.Linq;
 
-namespace voicio.SpeechService
+namespace voicio.Services
 {
     public class AudioPlayerService
     {

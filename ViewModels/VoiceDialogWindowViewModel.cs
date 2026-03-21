@@ -1,18 +1,15 @@
-﻿using AvaloniaEdit.Editing;
-using ReactiveUI;
+﻿using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using voicio.Models;
 using voicio.Services;
-using voicio.SpeechService;
 
 namespace voicio.ViewModels
 {
     public class VoiceDialogWindowViewModel : ViewModelBase
     {
         public SearchService SearchService { get; set; }
-        //public Interaction<bool, bool> RedirectToSearchResult { get; } = new Interaction<bool, bool>();
         private string _Query = "";
         public string Query
         {
@@ -33,13 +30,13 @@ namespace voicio.ViewModels
         }
         public void SearchAction()
         {
-            List<Hint> hints = SearchService.SearchHint(Query, false);
+            List<Hint> hints = SearchService.SearchHint(Query, true, false);
         }
         public void ProcessAction()
         {
             try
             {
-                List<ScriptCodeModel> hints = SearchService.SearchScript(Query, false);
+                List<ScriptCodeModel> hints = SearchService.SearchScript(Query, true, false);
                 if (hints.Count > 0)
                 {
                     Assembly asm = Assembly.Load(hints[0].BinaryExecutable);
@@ -47,8 +44,7 @@ namespace voicio.ViewModels
                     MethodInfo entrypoint = type.GetMethod("Handler");
                     if (entrypoint != null)
                     {
-                        Delegate.CreateDelegate(typeof(Action<TextArea>), entrypoint);
-
+                        entrypoint.Invoke(null, null);
                     }
                 }
             }

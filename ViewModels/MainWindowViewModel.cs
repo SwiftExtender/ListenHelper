@@ -19,8 +19,8 @@ namespace voicio.ViewModels
     public class MainWindowViewModel : ViewModelBase
     {
         //private TaskCompletionSource<bool> voiceSearchTask;
-        private ObservableCollection<string> _LastSearches;
-        public ObservableCollection<string> LastSearches
+        private ObservableCollection<SearchItem> _LastSearches;
+        public ObservableCollection<SearchItem> LastSearches
         {
             get => _LastSearches;
             set => this.RaiseAndSetIfChanged(ref _LastSearches, value);
@@ -252,8 +252,8 @@ namespace voicio.ViewModels
 
         public void StartSearch()
         {
-            var hints = _searchService.SearchHint(Query, IsFuzzy, IsTextSearch, IsCommentSearch);
-            LastSearches = _searchService.LastHintSearches;
+            var hints = _searchService.SearchHint(Query, false, IsFuzzy, IsTextSearch, IsCommentSearch);
+            LastSearches = _searchService.LastSearches;
             HintsRows = new ObservableCollection<Hint>(hints.Distinct());
             if (HintsRows.Count > 0)
             {
@@ -267,13 +267,13 @@ namespace voicio.ViewModels
 
             TreeDataGridInit();
         }
-        public MainWindowViewModel(SearchService searchService)
+        public MainWindowViewModel(SearchService searchService, string query = "")
         {
             StartSearchCommand = ReactiveCommand.Create(StartSearch);
             //StartVoiceSearchCommand = ReactiveCommand.CreateFromTask(StartVoiceSearch);
             //StartVoiceSearchCommand = ReactiveCommand.Create(StartVoiceSearch);
             _searchService = searchService;
-            LastSearches = searchService.LastHintSearches;
+            LastSearches = searchService.LastSearches;
             List<Hint> hints = new List<Hint>();
             using (var DataSource = new HelpContext())
             {

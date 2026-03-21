@@ -8,16 +8,12 @@ using System.Reactive;
 using System.Threading;
 using System.Threading.Tasks;
 using voicio.Services;
-using voicio.SpeechService;
 using voicio.Views;
 
 namespace voicio.ViewModels
 {
-
     public class MainGlobalViewModel : ViewModelBase
     {
-        //private ImportWindow importWindow = null;
-        //private TagWindow tagWindow = null;
         public SearchService SearchService { get; set; }
 
         public string[] garbageWords = ["the"];
@@ -69,6 +65,8 @@ namespace voicio.ViewModels
                             redirectExecuteWindow.Show();
                             break;
                         case SetSearchTypeWord:
+                            var settingsWindow = new SetSearchTypeWindow() { DataContext = new SetSearchTypeWindowViewModel(recorder, recognition) };
+                            settingsWindow.Show(); 
                             //audio = recorder.StartRecord(2);
                             //string secondWordForType = recognition.GetRecognizeTextResult(audio);
                             //if (secondWordForType == FuzzySearchWord || secondWordForType == StrictSearchWord)

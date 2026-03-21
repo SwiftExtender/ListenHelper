@@ -18,7 +18,7 @@ namespace voicio.ViewModels
 {
     public class ScriptWindowViewModel : ViewModelBase
     {
-        const string templateCode = "using System;\r\nusing AvaloniaEdit.Editing;\r\n\r\nnamespace VoiceViewActionPlugin {\r\nclass Plugin\r\n{\r\n}\r\n}\r\n";
+        const string templateCode = "using System;\r\n\r\nnamespace VoiceViewActionPlugin {\r\nclass Plugin\r\n{\r\npublic static void Handler()\r\n}\r\n}\r\n";
         public void CopyMouseCommand(TextArea textArea)
         {
             ApplicationCommands.Copy.Execute(null, textArea);

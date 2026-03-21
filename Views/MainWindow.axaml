@@ -5,14 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:bh="using:voicio.Behaviors"
 		xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
-		xmlns:vis="using:voicio.VisualStyle"
+		xmlns:services="using:voicio.Services"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600" Width="800" Height="600" MinWidth="800" MinHeight="240"
         x:Class="voicio.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
 		Name="VoiceView"
         Icon="/Assets/avalonia-logo.ico"
         Title="VoiceView"
-		Background="#1A1A1A"
         Topmost="{Binding IsPinnedWindow}"
 		WindowStartupLocation="CenterScreen"
 		ExtendClientAreaToDecorationsHint="True"
@@ -23,6 +22,11 @@
 		<Label Margin="10,5,10,0" BorderBrush="White">VoiceView</Label>
 		<DockPanel>
 			<AutoCompleteBox IsTextCompletionEnabled="True" Focusable="True" FilterMode="None" x:Name="searchbox" Text="{Binding Query}" ItemsSource="{Binding LastSearches}" Width="600" Watermark="Input..." Margin="10,40,10,0">
+				<AutoCompleteBox.ItemTemplate>
+					<DataTemplate x:DataType="services:SearchItem">
+						<TextBlock Text="{Binding Query}"></TextBlock>
+					</DataTemplate>
+				</AutoCompleteBox.ItemTemplate>
 				<i:Interaction.Behaviors>
 					<bh:DropdownBehavior/>
 				</i:Interaction.Behaviors>

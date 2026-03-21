@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using Vosk;
 
-namespace voicio.SpeechService
+namespace voicio.Services
 {
     public class SpeechRecognitionService
     {

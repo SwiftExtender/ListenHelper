@@ -3,6 +3,9 @@
 	<Styles.Resources>
 		<Thickness x:Key="MenuFlyoutScrollerMargin">0</Thickness>
 	</Styles.Resources>
+	<Style Selector="Window">
+		<Setter Property="Background" Value="#1A1A1A"/>
+	</Style>
 	<Style Selector="ScrollViewer.TabScroll /template/ ScrollBar:horizontal">
 		<Setter Property="Background" Value="Blue"/>
 		<Setter Property="MaxHeight" Value="8"/>

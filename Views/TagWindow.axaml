@@ -7,7 +7,6 @@
 		x:Class="voicio.Views.TagWindow"
 		x:DataType="vm:TagWindowViewModel"
 		Name="TagManageWindow"
-		Background="#1A1A1A"
 		Title="Tags"
 		Topmost="{Binding IsPinnedWindow}"
 		WindowStartupLocation="CenterScreen"

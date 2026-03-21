@@ -13,7 +13,6 @@
 		ExtendClientAreaToDecorationsHint="True"
 		ExtendClientAreaTitleBarHeightHint="-1"
 		WindowState="Maximized"
-		Background="#1A1A1A"
 		Title="Scripts Editor"
 		>
 	<Window.Styles>

@@ -1,4 +1,5 @@
 ﻿using ReactiveUI;
+using voicio.Services;
 
 namespace voicio.ViewModels
 {
@@ -10,8 +11,9 @@ namespace voicio.ViewModels
             get => _SearchType;
             set => this.RaiseAndSetIfChanged(ref _SearchType, value);
         }
-        public SetSearchTypeWindowViewModel(string searchType)
+        public SetSearchTypeWindowViewModel(AudioRecorderService recorder, SpeechRecognitionService recognition)
         {
+
             SearchType = searchType;
         }
     }

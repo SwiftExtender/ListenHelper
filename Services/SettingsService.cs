@@ -12,6 +12,7 @@ namespace voicio.Services
         public string SearchWord = "find";
         public string ActionWord = "execute";
         public string SetSearchTypeWord = "type";
+        public string BackgroundColor = "";
     }
     public class SettingsService
     {

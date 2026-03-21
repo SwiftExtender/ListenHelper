@@ -7,7 +7,6 @@
 		x:Class="voicio.Views.ImportWindow"
 		x:DataType="vm:ImportWindowViewModel"
 		Name="ImportManageWindow"
-		Background="#1A1A1A"
 		WindowStartupLocation="CenterScreen"
 		ExtendClientAreaToDecorationsHint="True"
 		ExtendClientAreaTitleBarHeightHint="-1">
