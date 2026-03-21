@@ -257,7 +257,7 @@ namespace voicio.ViewModels
             HintsRows = new ObservableCollection<Hint>(hints.Distinct());
             if (HintsRows.Count > 0)
             {
-                StatusText = "SearchHint result: " + HintsRows.Count.ToString();
+                StatusText = "Search results: " + HintsRows.Count.ToString() + " rows";
             }
             else
             {

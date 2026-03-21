@@ -43,7 +43,7 @@ namespace voicio.ViewModels
                 if (hints.Count > 0)
                 {
                     Assembly asm = Assembly.Load(hints[0].BinaryExecutable);
-                    Type type = asm.GetType("FastActionPlugin.Plugin");
+                    Type type = asm.GetType("VoiceViewActionPlugin.Plugin");
                     MethodInfo entrypoint = type.GetMethod("Handler");
                     if (entrypoint != null)
                     {

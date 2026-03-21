@@ -18,7 +18,7 @@ namespace voicio.ViewModels
 {
     public class ScriptWindowViewModel : ViewModelBase
     {
-        const string templateCode = "using System;\r\nusing AvaloniaEdit.Editing;\r\n\r\nnamespace ContextItemPlugin {\r\nclass Plugin\r\n{\r\n}\r\n}\r\n";
+        const string templateCode = "using System;\r\nusing AvaloniaEdit.Editing;\r\n\r\nnamespace VoiceViewActionPlugin {\r\nclass Plugin\r\n{\r\n}\r\n}\r\n";
         public void CopyMouseCommand(TextArea textArea)
         {
             ApplicationCommands.Copy.Execute(null, textArea);
@@ -159,30 +159,31 @@ namespace voicio.ViewModels
             //refs.Add(AssemblyMetadata.CreateFromFile("Avalonia.Dialogs.dll").GetReference());
             //refs.Add(AssemblyMetadata.CreateFromFile("AvaloniaEdit.dll").GetReference());
             //refs.Add(AssemblyMetadata.CreateFromFile("AvaloniaEdit.TextMate.dll").GetReference());
-            foreach (string file in Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll"))
+            try
             {
-                try
+                foreach (string file in Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll"))
                 {
                     PortableExecutableReference defaultImport = MetadataReference.CreateFromFile(file);
                     refs.Add(defaultImport);
                 }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.ToString());
-                }
             }
-            foreach (string file in Directory.GetFiles(customImportsDir, "*.dll"))
+            catch (Exception e)
             {
-                try
+                Console.WriteLine(e.ToString());
+            }
+            try
+            {
+                foreach (string file in Directory.GetFiles(customImportsDir, "*.dll"))
                 {
                     PortableExecutableReference customImport = MetadataReference.CreateFromFile(file);
                     refs.Add(customImport);
                 }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.ToString());
-                }
             }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+
             return refs;
         }
         public void CompileSourceCode()

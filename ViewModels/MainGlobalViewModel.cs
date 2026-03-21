@@ -20,7 +20,7 @@ namespace voicio.ViewModels
         //private TagWindow tagWindow = null;
         public SearchService SearchService { get; set; }
 
-        public string[] garbageWords = ["the", "sniff"];
+        public string[] garbageWords = ["the"];
         //init word
         public const string VoiceSearchWord = "find";
         public const string VoiceExecuteWord = "execute";
@@ -55,7 +55,7 @@ namespace voicio.ViewModels
                 {
                     token.ThrowIfCancellationRequested();
                     //keyword processing
-                    byte[] audio = recorder.StartRecord(3, "temp" + DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString() + ".wav");
+                    byte[] audio = recorder.StartRecord(3);//, "temp" + DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString() + ".wav"
                     string word = recognition.GetRecognizeTextResult(audio);
                     switch (word)
                     {
@@ -106,8 +106,8 @@ namespace voicio.ViewModels
             });
             ShowVoiceSettingsCommand = ReactiveCommand.Create(() =>
             {
-                //var w2 = new VoiceSettingWindow() { DataContext = new VoiceSettingWindowViewModel(_cts) };
-                //w2.Show();
+                var w2 = new ScriptWindow() { DataContext = new ScriptWindowViewModel() };
+                w2.Show();
             });
             ShowImportWindowCommand = ReactiveCommand.Create(() =>
             {

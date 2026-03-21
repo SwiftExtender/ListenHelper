@@ -18,15 +18,11 @@
 		ExtendClientAreaToDecorationsHint="True"
 		ExtendClientAreaTitleBarHeightHint="-1"
 		>
-	<Window.Styles>
-		
-		
-	</Window.Styles>
 	<Border BorderThickness="1.5" BorderBrush="#D2B1A38E" IsVisible="True">
 	<StackPanel>
 		<Label Margin="10,5,10,0" BorderBrush="White">VoiceView</Label>
 		<DockPanel>
-			<AutoCompleteBox Focusable="True" FilterMode="None" x:Name="searchbox" Text="{Binding Query}" ItemsSource="{Binding LastSearches}" Width="600" Watermark="Input..." Margin="10,40,10,0">
+			<AutoCompleteBox IsTextCompletionEnabled="True" Focusable="True" FilterMode="None" x:Name="searchbox" Text="{Binding Query}" ItemsSource="{Binding LastSearches}" Width="600" Watermark="Input..." Margin="10,40,10,0">
 				<i:Interaction.Behaviors>
 					<bh:DropdownBehavior/>
 				</i:Interaction.Behaviors>
